@@ -12,7 +12,7 @@ export async function dayView(root: HTMLElement, [courseId, dayStr]: string[]) {
     return;
   }
   const prog = await progressMap(courseId);
-  const hide = settings.get().hideText;
+  const mode = settings.get().textMode;
 
   const rows = day.sentences.map((s, i) => {
     const p = prog.get(skey(courseId, s.id));
@@ -21,7 +21,12 @@ export async function dayView(root: HTMLElement, [courseId, dayStr]: string[]) {
       'a',
       { class: 'row sentence-row', href: `#/c/${enc(courseId)}/d/${day.day}/${i}` },
       h('span', { class: 'num' }, i + 1),
-      h('span', { class: `row-text${hide ? ' blurred' : ''}` }, s.text, s.zh && h('span', { class: 'row-zh' }, s.zh)),
+      h(
+        'span',
+        { class: `row-text${mode === 'none' ? ' blurred' : ''}` },
+        s.text,
+        s.zh && h('span', { class: `row-zh${mode === 'en' ? ' blurred' : ''}` }, s.zh),
+      ),
       h('span', { class: `badge${badge === '●' ? ' dot' : ''}` }, badge),
     );
   });

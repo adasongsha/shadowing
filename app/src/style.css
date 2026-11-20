@@ -161,6 +161,24 @@ h2 {
 .icon-btn[aria-pressed='true'] {
   background: var(--accent-soft);
 }
+.text-mode {
+  position: relative;
+}
+.mode-badge {
+  position: absolute;
+  right: 3px;
+  bottom: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
 .icon-btn.danger {
   color: var(--muted);
 }
@@ -449,6 +467,13 @@ h2 {
 .hide-text .sentence-text:not(.peek) {
   filter: blur(0.55em);
 }
+.hide-zh .sentence-text:not(.peek) .translation {
+  filter: blur(0.5em);
+}
+.hide-zh .translation {
+  transition: filter 0.2s;
+}
+.hide-zh .peek-hint,
 .hide-text .peek-hint {
   display: block;
 }

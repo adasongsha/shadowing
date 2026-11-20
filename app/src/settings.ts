@@ -1,14 +1,17 @@
 // 轻量偏好设置，存 localStorage（读写都 try/catch，失败时用默认值）。
 
+/** 文本显示：all 英文+中文 / en 只显示英文（隐藏中文）/ none 全部隐藏 */
+export type TextMode = 'all' | 'en' | 'none';
+
 export interface Settings {
   rate: 0.75 | 1;
-  hideText: boolean;
+  textMode: TextMode;
   focusMode: boolean;
   /** 录完立即释放麦克风：如果实测录音后回放声音很小（走了听筒），打开它 */
   releaseMicAfterRecord: boolean;
 }
 
-const DEFAULTS: Settings = { rate: 1, hideText: false, focusMode: false, releaseMicAfterRecord: false };
+const DEFAULTS: Settings = { rate: 1, textMode: 'all', focusMode: false, releaseMicAfterRecord: false };
 const KEY = 'shadowing.settings';
 
 let cache: Settings | null = null;
@@ -17,7 +20,11 @@ export const settings = {
   get(): Settings {
     if (!cache) {
       try {
-        cache = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
+        const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+        // 兼容旧版的 hideText 开关
+        if (saved.textMode === undefined && saved.hideText) saved.textMode = 'none';
+        delete saved.hideText;
+        cache = { ...DEFAULTS, ...saved };
       } catch {
         cache = { ...DEFAULTS };
       }

@@ -12,7 +12,7 @@ import {
   type Recording,
 } from '../db';
 import { enc, go } from '../nav';
-import { settings } from '../settings';
+import { settings, type TextMode } from '../settings';
 import { fmtAgo, h, icon, iconEl, toast } from '../ui';
 
 export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]: string[]) {
@@ -52,10 +52,11 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
   const text = h('div', { class: 'sentence-text' }, h('p', { class: 'sentence' }, s.text), s.zh && h('p', { class: 'translation' }, s.zh));
   const textWrap = h(
     'div',
-    { class: 'sentence-wrap', onclick: () => st.hideText && text.classList.toggle('peek') },
+    { class: 'sentence-wrap', onclick: () => st.textMode !== 'all' && text.classList.toggle('peek') },
     text,
-    h('p', { class: 'peek-hint' }, '文本已隐藏 · 点一下偷看'),
   );
+  const peekHint = h('p', { class: 'peek-hint' });
+  textWrap.append(peekHint);
 
   const rateSeg = h(
     'div',
@@ -96,27 +97,27 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
 
   const history = h('div', { class: 'history' });
 
+  // 文本显示三档循环：全部显示 → 隐藏中文 → 全部隐藏
+  const MODES: Record<TextMode, { next: TextMode; badge: string; label: string; toast: string }> = {
+    all: { next: 'en', badge: '', label: '文本：全部显示', toast: '显示英文和中文' },
+    en: { next: 'none', badge: '英', label: '文本：只显示英文', toast: '已隐藏中文翻译' },
+    none: { next: 'all', badge: '', label: '文本：全部隐藏', toast: '已隐藏全部文本（纯听）' },
+  };
+  const textModeBtn = h('button', {
+    class: 'icon-btn text-mode',
+    type: 'button',
+    onclick: () => {
+      settings.set({ textMode: MODES[st.textMode].next });
+      st.textMode = settings.get().textMode;
+      toast(MODES[st.textMode].toast, 1500);
+      applyModes();
+    },
+  });
+
   const toggles = h(
     'div',
     { class: 'topbar-actions' },
-    h(
-      'button',
-      {
-        class: 'icon-btn',
-        type: 'button',
-        'aria-label': '隐藏 / 显示文本',
-        'aria-pressed': String(st.hideText),
-        onclick: (e: Event) => {
-          settings.set({ hideText: !settings.get().hideText });
-          st.hideText = settings.get().hideText;
-          const b = e.currentTarget as HTMLElement;
-          b.setAttribute('aria-pressed', String(st.hideText));
-          b.innerHTML = st.hideText ? icon.eyeOff : icon.eye;
-          applyModes();
-        },
-        html: st.hideText ? icon.eyeOff : icon.eye,
-      },
-    ),
+    textModeBtn,
     h(
       'button',
       {
@@ -189,8 +190,14 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
 
   function applyModes() {
     root.classList.toggle('focus', st.focusMode);
-    root.classList.toggle('hide-text', st.hideText);
+    root.classList.toggle('hide-text', st.textMode === 'none');
+    root.classList.toggle('hide-zh', st.textMode === 'en' && !!s!.zh);
     text.classList.remove('peek');
+    const m = MODES[st.textMode];
+    textModeBtn.innerHTML = (st.textMode === 'none' ? icon.eyeOff : icon.eye) + (m.badge ? `<span class="mode-badge">${m.badge}</span>` : '');
+    textModeBtn.setAttribute('aria-label', m.label);
+    textModeBtn.setAttribute('aria-pressed', String(st.textMode !== 'all'));
+    peekHint.textContent = st.textMode === 'none' ? '文本已隐藏 · 点一下偷看' : '点一下偷看中文';
   }
 
   function updateButtons() {
