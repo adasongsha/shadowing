@@ -79,8 +79,10 @@ class Player {
   play(items: PlayItem[], tag: string, gapMs = 400): Promise<void> {
     this.stop();
     if (!items.length) return Promise.resolve();
-    // 播放前把会话切回「播放」，让声音走扬声器、且不受静音开关影响
-    if (!recorder.isRecording) setSession('playback');
+    // 麦克风未占用时才切到「播放」会话（不受静音开关影响）。
+    // 麦克风占用期间保持 play-and-record 不变：在两种会话之间来回切换时，iOS 要重新配置音频通道，
+    // 录完马上播放的那一次可能「进度在走但没声音」。
+    if (!recorder.holdsMic) setSession('playback');
 
     const my = ++this.token;
     const el = new Audio();
@@ -151,6 +153,11 @@ class Recorder {
     return this.mr?.state === 'recording';
   }
 
+  /** 当前是否持有一个活动的麦克风 stream */
+  get holdsMic() {
+    return !!this.stream?.getAudioTracks().some((t) => t.readyState === 'live');
+  }
+
   get supported() {
     return !!navigator.mediaDevices?.getUserMedia && typeof MediaRecorder !== 'undefined';
   }
@@ -161,7 +168,9 @@ class Recorder {
 
   /** 第一次点击录音时才申请麦克风；之后在本会话内复用同一个 stream */
   private async getStream() {
-    if (this.stream && this.stream.getAudioTracks().some((t) => t.readyState === 'live')) return this.stream;
+    if (this.holdsMic) return this.stream!;
+    // 拿麦克风前设好会话类型，之后整个练习过程中保持不变
+    setSession('play-and-record');
     this.stream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
     });
@@ -172,7 +181,6 @@ class Recorder {
   async start(onAutoStop?: () => void): Promise<RecordResult> {
     if (this.isRecording) throw new Error('已在录音');
     player.stop();
-    setSession('play-and-record');
     const stream = await this.getStream();
     const mime = pickMime();
     const mr = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 96000 } : undefined);
@@ -184,7 +192,6 @@ class Recorder {
         clearTimeout(this.autoStop);
         const duration = (Date.now() - this.startedAt) / 1000;
         this.mr = null;
-        setSession('playback');
         if (settings.get().releaseMicAfterRecord) this.release();
         const type = mr.mimeType || mime || 'audio/mp4';
         resolve({ blob: new Blob(chunks, { type }), duration });
