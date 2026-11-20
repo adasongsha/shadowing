@@ -69,6 +69,8 @@ data/raw/scripts/教材.pdf      可选：有教材时按原文选句，准确�
 cd pipeline
 .venv/bin/python run_all.py --day 1        # → data/packs/oral-sentences_day01.zip
 .venv/bin/python run_all.py --day 1-5      # 多天打成一个包
+.venv/bin/python 06_pack.py --day all      # 全部天数打成一个包 → oral-sentences.zip
+.venv/bin/python qa_check.py --day 1-18    # 质检
 .venv/bin/python run_all.py --day 1 --from 03   # 只重跑第 03 步及以后
 ```
 
@@ -82,6 +84,7 @@ cd pipeline
 | `03_select.py` | 找到两个朗读段，每句取一遍；强制对齐 + 按音量修正起止 | `selected.json` |
 | `04_cut.py` | 留白、淡入淡出、响度归一（-16 LUFS）、AAC 80kbps | `audio/*.m4a` `cut.json` |
 | `06_pack.py` | 打包课程包 | `data/packs/*.zip` |
+| `qa_check.py` | 质检：把切好的每句再识别一遍，和原文比对，列出需要人工听的句子 | `qa.json` |
 
 `03_select` 的输出里标「⚠️ 匹配度低」的句子，多半是识别把单词听错了（比如 zip your → zipper），位置通常是对的，听一下确认即可。
 

@@ -28,8 +28,26 @@ CJK = re.compile(r"[㐀-鿿]")
 SR = 16000
 
 
+ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+
+def num_words(n: int) -> str:
+    """简单的数字 → 英文（0～9999），Whisper 常把 eight 写成 8"""
+    if n < 20:
+        return ONES[n]
+    if n < 100:
+        return TENS[n // 10] + ("" if n % 10 == 0 else " " + ONES[n % 10])
+    if n < 1000:
+        return ONES[n // 100] + " hundred" + ("" if n % 100 == 0 else " " + num_words(n % 100))
+    if n < 10000:
+        return num_words(n // 1000) + " thousand" + ("" if n % 1000 == 0 else " " + num_words(n % 1000))
+    return str(n)
+
+
 def norm_tokens(text):
     text = text.lower().replace("’", "'")
+    text = re.sub(r"\d+", lambda m: " " + num_words(int(m.group(0))) + " ", text)
     return re.findall(r"[a-z]+(?:'[a-z]+)?", text)
 
 
@@ -39,11 +57,23 @@ def word_stream(transcript):
     """[{tok, start, end, en}]：英文词一个 token；中文词作为「隔断」（tok=None）"""
     out = []
     for seg in transcript:
+        prev_en = False
         for w in seg["words"]:
             raw = w["w"]
             if CJK.search(raw):
                 out.append({"tok": None, "start": w["start"], "end": w["end"], "en": False})
+                prev_en = False
                 continue
+            # Whisper 偶尔把一个词拆成几段（" sp" + "ade"）：不以空格开头的片段拼回前一个词
+            if prev_en and raw[:1].isalpha() and not raw.startswith(" ") and out and out[-1]["en"]:
+                tail = norm_tokens(raw)
+                if tail:
+                    out[-1]["tok"] += tail[0]
+                    out[-1]["end"] = w["end"]
+                    for t in tail[1:]:
+                        out.append({"tok": t, "start": w["start"], "end": w["end"], "en": True})
+                    continue
+            prev_en = True
             toks = norm_tokens(raw)
             for t in toks:  # 罕见情况：一个「词」里有多个 token
                 out.append({"tok": t, "start": w["start"], "end": w["end"], "en": True})
@@ -130,10 +160,49 @@ def refine(text, lo, hi, audio, cfg):
                              return_char_alignments=False)
     except Exception:
         return None
-    ws = [w for s in out["segments"] for w in s.get("words", []) if "start" in w]
-    if not ws:
+    words = [w for s in out["segments"] for w in s.get("words", [])]
+    ws = [w for w in words if "start" in w]
+    if not ws or len(ws) < len(words):
         return None
-    return ws[0]["start"], ws[-1]["end"]
+    scores = [w.get("score", 0) for w in ws]
+    # 可信度：平均分，出现接近 0 的词（多半是把别的声音硬对上了）要重罚
+    quality = float(np.mean(scores)) - 0.5 * sum(x < 0.2 for x in scores) / len(scores)
+    return ws[0]["start"], ws[-1]["end"], quality
+
+
+def speech_islands(db, thr, bridge=0.15):
+    """按音量找连续说话的片段（短于 bridge 的安静不切开），返回 [(start, end)] 秒"""
+    loud = db > thr
+    gap = int(bridge / FRAME)
+    out, s0, last = [], None, None
+    for k, v in enumerate(loud):
+        if not v:
+            continue
+        if s0 is None:
+            s0 = k
+        elif k - last > gap:
+            out.append((s0 * FRAME, (last + 1) * FRAME))
+            s0 = k
+        last = k
+    if s0 is not None:
+        out.append((s0 * FRAME, (last + 1) * FRAME))
+    return out
+
+
+def best_alignment(text, ws, we, hard_lo, hard_hi, islands, audio, cfg):
+    """多个候选窗口各对齐一次，取可信度最高的。返回 (start, end, quality) 或 None"""
+    los = {ws - 0.4} | {a - 0.05 for a, _ in islands if ws - 0.8 <= a <= ws + 0.6}
+    his = {we + 0.4} | {b + 0.05 for _, b in islands if we - 0.3 <= b <= we + 1.5}
+    best = None
+    for lo in los:
+        for hi in his:
+            lo2, hi2 = max(lo, hard_lo), min(hi, hard_hi)
+            if hi2 - lo2 < 0.3:
+                continue
+            r = refine(text, lo2, hi2, audio, cfg)
+            if r and (best is None or r[2] > best[2]):
+                best = r
+    return best
 
 
 # ---------------- 边界修正：按实际音量 ----------------
@@ -210,6 +279,34 @@ def select_with_script(cfg, day, work):
 
     db = frame_db(audio) if audio is not None else None
     thr = float(np.percentile(db, 5)) + sc.get("speech_margin_db", 25) if db is not None else 0
+    islands = speech_islands(db, thr) if db is not None else []
+
+    # 朗读段里每个词属于哪一句：对齐窗口不能越过别的句子
+    owner = {}
+    for p in passes:
+        for kk, c in enumerate(p):
+            if c:
+                for t in range(c[1], c[2]):
+                    owner[t] = kk
+
+    def align_window(k, c, reach=1.5):
+        """对齐窗口：向两侧延伸，直到碰到中文、别的句子，或超过 reach 秒。
+        不以 Whisper 的相邻词为界——Whisper 可能把句尾的词识别成别的片段（如 thin → same）"""
+        _, i, j = c
+        lo, hi = W[i]["start"] - reach, W[j - 1]["end"] + reach
+        t = j
+        while t < len(W) and W[t]["start"] < hi:
+            if not W[t]["en"] or owner.get(t, k) != k:
+                hi = W[t]["start"]
+                break
+            t += 1
+        t = i - 1
+        while t >= 0 and W[t]["end"] > lo:
+            if not W[t]["en"] or owner.get(t, k) != k:
+                lo = W[t]["end"]
+                break
+            t -= 1
+        return max(0.0, lo), min(total, hi)
 
     selected, missing = [], []
     for k, item in enumerate(script, 1):
@@ -238,13 +335,14 @@ def select_with_script(cfg, day, work):
 
         start, end, min_start, max_end = span(chosen)
         aligned = False
+        align_q = None
         if audio is not None:
-            lo = max(min_start, start - 0.4)
-            hi = min(max_end, end + 0.4)
-            r = refine(item["text"], lo, hi, audio, cfg)
-            # 对齐结果与 Whisper 差太多时不采用（多半是对齐失败）
-            if r and abs(r[0] - start) < 0.8 and abs(r[1] - end) < 0.8 and r[1] > r[0]:
+            hard_lo, hard_hi = align_window(k - 1, chosen)
+            r = best_alignment(item["text"], start, end, hard_lo, hard_hi, islands, audio, cfg)
+            # 可信度太低、或与 Whisper 差太多时不采用；句尾允许多延伸（Whisper 可能漏了最后一个词）
+            if r and r[2] >= 0.5 and abs(r[0] - start) < 1.0 and -0.8 < r[1] - end < 1.5 and r[1] > r[0]:
                 start, end, aligned = r[0], r[1], True
+                align_q = round(r[2], 2)
         if db is not None:
             start, end, min_start, max_end = snap_bounds(start, end, db, thr)
         alternates = []
@@ -268,6 +366,7 @@ def select_with_script(cfg, day, work):
             "pass": ("first" if chosen is first else "last") if in_pass else "other",
             "occurrences": len(occ),
             "aligned": aligned,
+            "align_quality": align_q,
             "alternates": alternates,
         })
     return selected, missing
