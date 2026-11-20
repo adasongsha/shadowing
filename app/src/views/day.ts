@@ -21,7 +21,7 @@ export async function dayView(root: HTMLElement, [courseId, dayStr]: string[]) {
       'a',
       { class: 'row sentence-row', href: `#/c/${enc(courseId)}/d/${day.day}/${i}` },
       h('span', { class: 'num' }, i + 1),
-      h('span', { class: `row-text${hide ? ' blurred' : ''}` }, s.text),
+      h('span', { class: `row-text${hide ? ' blurred' : ''}` }, s.text, s.zh && h('span', { class: 'row-zh' }, s.zh)),
       h('span', { class: `badge${badge === '●' ? ' dot' : ''}` }, badge),
     );
   });

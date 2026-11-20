@@ -40,6 +40,7 @@ export async function importPack(file: File, onProgress?: (msg: string) => void)
     sentences: (d.sentences || []).map((s: any) => ({
       id: String(s.id),
       text: String(s.text ?? ''),
+      zh: s.zh ? String(s.zh) : undefined,
       audio: String(s.audio),
       duration: typeof s.duration === 'number' ? s.duration : undefined,
     })),

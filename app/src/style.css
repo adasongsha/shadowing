@@ -421,6 +421,24 @@ h2 {
   -webkit-user-select: text;
   transition: filter 0.2s;
 }
+.translation {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 16px;
+  color: var(--muted);
+}
+.focus .translation {
+  font-size: 18px;
+}
+.row-zh {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.sentence-text {
+  transition: filter 0.2s;
+}
 .peek-hint {
   display: none;
   margin: 10px 0 0;
@@ -428,7 +446,7 @@ h2 {
   font-size: 13px;
   color: var(--muted);
 }
-.hide-text .sentence:not(.peek) {
+.hide-text .sentence-text:not(.peek) {
   filter: blur(0.55em);
 }
 .hide-text .peek-hint {

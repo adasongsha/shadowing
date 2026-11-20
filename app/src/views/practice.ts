@@ -49,7 +49,7 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
   const recLabel = bRec.querySelector('.lbl')!;
   const recIcon = bRec.querySelector('.ic')!;
 
-  const text = h('p', { class: 'sentence' }, s.text);
+  const text = h('div', { class: 'sentence-text' }, h('p', { class: 'sentence' }, s.text), s.zh && h('p', { class: 'translation' }, s.zh));
   const textWrap = h(
     'div',
     { class: 'sentence-wrap', onclick: () => st.hideText && text.classList.toggle('peek') },

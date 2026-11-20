@@ -5,6 +5,8 @@ import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
 export interface Sentence {
   id: string;
   text: string;
+  /** 中文翻译（可选） */
+  zh?: string;
   audio: string;
   duration?: number;
 }

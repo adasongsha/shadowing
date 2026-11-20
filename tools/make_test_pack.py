@@ -17,8 +17,9 @@ OUT = ROOT / "data" / "packs" / "test-pack.zip"
 VOICE = "Samantha"  # 美式英语女声；`say -v '?'` 可查看其它声音
 
 DAYS = {
-    1: ["How's it going?", "I'm running a little late today.", "Could you say that again, please?"],
-    2: ["What do you do for a living?", "It's been a long week, hasn't it?"],
+    1: [("How's it going?", "最近怎么样？"), ("I'm running a little late today.", "我今天要晚一点到。"),
+        ("Could you say that again, please?", "请你再说一遍好吗？")],
+    2: [("What do you do for a living?", "你是做什么工作的？"), ("It's been a long week, hasn't it?", "这一周可真漫长，是吧？")],
 }
 
 
@@ -41,7 +42,7 @@ def main():
         files = []
         for day, sentences in DAYS.items():
             items = []
-            for i, text in enumerate(sentences, 1):
+            for i, (text, zh) in enumerate(sentences, 1):
                 sid = f"day{day:02d}_s{i:03d}"
                 aiff = tmp / f"{sid}.aiff"
                 m4a = tmp / f"{sid}.m4a"
@@ -52,7 +53,7 @@ def main():
                     "-af", "adelay=250,apad=pad_dur=0.35,afade=t=in:d=0.03,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=44100",
                     "-ac", "1", "-c:a", "aac", "-b:a", "80k", str(m4a),
                 )
-                items.append({"id": sid, "text": text, "audio": f"audio/{sid}.m4a", "duration": duration(m4a)})
+                items.append({"id": sid, "text": text, "zh": zh, "audio": f"audio/{sid}.m4a", "duration": duration(m4a)})
                 files.append(m4a)
             days.append({"day": day, "title": f"Day {day}", "sentences": items})
 
