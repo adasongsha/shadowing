@@ -1,0 +1,6 @@
+# Python 3.10+；Apple 芯片 Mac
+mlx-whisper
+silero-vad
+whisperx
+pyyaml
+pypdf

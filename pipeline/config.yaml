@@ -1,0 +1,52 @@
+# 切句流水线参数。路径相对于本文件所在目录。
+
+course:
+  id: oral-sentences          # 课程包 id（App 里按它合并重复导入）
+  title: 口语句子课
+
+paths:
+  raw: ../data/raw            # 原始音频：raw/dayXX/*.m4a
+  work: ../data/work          # 中间产物：work/dayXX/...
+  packs: ../data/packs        # 输出课程包
+
+extract:
+  asr_rate: 16000             # 给 VAD / ASR 用
+  hq_rate: 44100              # 给最终切分用（保证听感）
+
+vad:                          # silero-vad
+  threshold: 0.5
+  min_silence_ms: 250         # 小于这个长度的停顿不切开
+  speech_pad_ms: 60
+
+asr:
+  backend: mlx                # mlx（Apple 芯片，推荐） | faster-whisper
+  # 本地模型目录（从 ModelScope 下载：mlx-community/whisper-large-v3-mlx），也可以填 Hugging Face 仓库名
+  model: ../data/models/whisper-large-v3-mlx
+  language: null              # null = 自动检测；中英混说时可试 zh
+  fw_model: large-v3          # faster-whisper 后端用
+
+align:
+  enabled: true               # 用 wav2vec2 强制对齐精修英文词边界（WhisperX）
+  language: en
+  model: ../data/models/wav2vec2-base-960h   # 本地目录（ModelScope: facebook/wav2vec2-base-960h）
+
+select:
+  # —— 教材模式（有 script.json）——
+  min_match: 0.7              # 教材原文与识别结果的最低匹配度（字母级）
+  max_read_gap: 8.0           # 朗读段里相邻两句的最大间隔（秒）
+  speech_margin_db: 25        # 比底噪高这么多 dB 才算在说话（用于修正句子起止；呼吸声不算）
+  prefer_pass: first          # 两遍朗读匹配度相当时取哪一遍：first（朗读①）| last（朗读②）
+  # —— 规则模式（无教材）——
+  min_words: 3
+  min_dur: 0.8                # 秒
+  max_dur: 15
+  similarity: 0.85            # 归一化文本相似度 ≥ 这个值视为重复
+  max_merge_gap: 0.6          # 被 VAD 切开的同一句，间隔小于这个值且文本未结束时合并
+
+cut:
+  pad_before: 0.25
+  pad_after: 0.35
+  guard: 0.05                 # 与相邻中文讲解至少保持的距离
+  fade: 0.03
+  loudnorm_i: -16             # 目标响度 LUFS
+  bitrate: 80k

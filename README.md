@@ -4,8 +4,8 @@
 
 | 部分 | 位置 | 状态 |
 |---|---|---|
-| A. 切句流水线（Python） | `pipeline/` | M2 开始 |
-| B. 练习 App（PWA） | `app/` | **M1 完成，待 iPhone 实测** |
+| A. 切句流水线（Python） | `pipeline/` | **M2：Day 1 已跑通** |
+| B. 练习 App（PWA） | `app/` | M1 完成，iPhone 已验证 |
 
 > 课程音频和你的录音**只存在本地**：App 是纯静态网页，课程包通过「文件」App 导入，存进手机的 IndexedDB，不上传任何服务器。`data/` 已加入 `.gitignore`。
 
@@ -23,7 +23,7 @@ app/                 练习 PWA（Vite + 原生 TypeScript，依赖只有 jszip�
 tools/
   make_test_pack.py  用 macOS 的 say 生成测试课程包
   make_icons.py      生成 App 图标
-pipeline/            切句流水线（M2 起）
+pipeline/            切句流水线（见下方「切句流水线」）
 data/                本地数据，不入 git
   raw/ work/ packs/
 ```
@@ -32,6 +32,58 @@ data/                本地数据，不入 git
 
 - Node.js 20.19+（Mac：`brew install node`）
 - Python 3.9+、ffmpeg（`brew install ffmpeg`）
+
+## 切句流水线（Part A）
+
+把每天的课程音频切成单句，打成课程包。每天的课结构是「开篇 → 朗读① → 逐句讲解 → 朗读②」，流水线只取朗读里的句子，讲解不放进课程包。
+
+### 安装（一次性）
+
+```bash
+brew install ffmpeg uv
+cd pipeline
+uv venv --python 3.12 .venv
+uv pip install --python .venv -r requirements.txt \
+  --index-url https://pypi.tuna.tsinghua.edu.cn/simple   # 国内用清华镜像
+```
+
+模型放在 `data/models/`（不入 git）。Hugging Face 在国内下载很慢，从 ModelScope 下：
+
+| 模型 | 用途 | ModelScope 仓库 | 本地目录 |
+|---|---|---|---|
+| whisper-large-v3（MLX 版，3GB） | 识别 | `mlx-community/whisper-large-v3-mlx` | `data/models/whisper-large-v3-mlx/` |
+| wav2vec2-base-960h（378MB） | 英文强制对齐 | `facebook/wav2vec2-base-960h` | `data/models/wav2vec2-base-960h/` |
+
+对齐还需要 NLTK 的 `punkt_tab`：下载 `https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt_tab.zip`，解压到 `pipeline/.venv/nltk_data/tokenizers/`。
+
+### 目录放法
+
+```
+data/raw/day01/xxx.m4a        每天一个目录，放原始音频（视频也行）
+data/raw/scripts/教材.pdf      可选：有教材时按原文选句，准确得多
+```
+
+### 运行
+
+```bash
+cd pipeline
+.venv/bin/python run_all.py --day 1        # → data/packs/oral-sentences_day01.zip
+.venv/bin/python run_all.py --day 1-5      # 多天打成一个包
+.venv/bin/python run_all.py --day 1 --from 03   # 只重跑第 03 步及以后
+```
+
+每一步也可以单独运行，参数都在 `config.yaml`：
+
+| 步骤 | 作用 | 输出（`data/work/dayXX/`） |
+|---|---|---|
+| `00_script.py` | 解析教材 PDF 的「句子训练篇」，得到每天的句子和中文翻译 | `script.json` |
+| `01_extract.py` | 转成 16k（识别用）和 44.1k（切分用）单声道 wav | `asr.wav` `hq.wav` |
+| `02_transcribe.py` | Whisper 逐词识别；对「有声音但没识别出来」的空白再补识别一遍 | `transcript.json` `segments.json` |
+| `03_select.py` | 找到两个朗读段，每句取一遍；强制对齐 + 按音量修正起止 | `selected.json` |
+| `04_cut.py` | 留白、淡入淡出、响度归一（-16 LUFS）、AAC 80kbps | `audio/*.m4a` `cut.json` |
+| `06_pack.py` | 打包课程包 | `data/packs/*.zip` |
+
+`03_select` 的输出里标「⚠️ 匹配度低」的句子，多半是识别把单词听错了（比如 zip your → zipper），位置通常是对的，听一下确认即可。
 
 ## M1：在 iPhone 上跑通练习 App
 
