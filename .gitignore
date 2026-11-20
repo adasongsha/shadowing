@@ -1,0 +1,19 @@
+# 课程音频与中间产物：绝不入库
+data/
+*.m4a
+*.mp3
+*.mp4
+*.wav
+*.zip
+# 密钥 / Cookie
+.env
+# 构建
+node_modules/
+app/dist/
+__pycache__/
+.venv/
+.DS_Store
+# 只留在本地：涉及具体课程平台与下载方法，不公开
+SPEC.md
+LOCAL.md
+tools/fetch_course.py

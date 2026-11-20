@@ -1,0 +1,22 @@
+{
+  "name": "shadowing-app",
+  "version": "0.1.0",
+  "description": "英语跟读对比 PWA",
+  "scripts": {
+    "dev": "vite",
+    "dev:https": "vite --host --mode https",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host"
+  },
+  "type": "module",
+  "dependencies": {
+    "idb": "^8.0.4",
+    "jszip": "^3.10.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  },
+  "private": true
+}
