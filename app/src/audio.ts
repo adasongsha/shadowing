@@ -4,7 +4,7 @@
 //   每次用户点击都新建一个 audio 元素（规避录音后音频被路由到听筒、音量变小的问题），
 //   「对比」的连续播放复用同一个元素、靠 ended 事件串联 —— 该元素已由点击激活，iOS 允许它继续换源播放。
 // 录音：MediaRecorder，按 audio/mp4 → audio/webm 探测格式；同一会话复用一个 MediaStream；
-//   离开练习页 / 进入后台时停止所有 track 释放麦克风；单句最长 30s 自动停止。
+//   只在进入后台时停止所有 track 释放麦克风（切页面不释放，避免 iOS 反复弹权限）；单句最长 30s 自动停止。
 
 import { settings } from './settings';
 
@@ -166,14 +166,14 @@ class Recorder {
     return this.isRecording ? Date.now() - this.startedAt : 0;
   }
 
-  /** 第一次点击录音时才申请麦克风；之后在本会话内复用同一个 stream */
+  /** 第一次点击录音时才申请麦克风；之后在 App 回到后台之前一直复用同一个 stream */
   private async getStream() {
     if (this.holdsMic) return this.stream!;
-    // 拿麦克风前设好会话类型，之后整个练习过程中保持不变
-    setSession('play-and-record');
     this.stream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
     });
+    // 拿到麦克风后设好会话类型，持有麦克风期间保持不变
+    setSession('play-and-record');
     return this.stream;
   }
 

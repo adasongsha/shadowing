@@ -5,7 +5,7 @@
 //   #/c/<courseId>/d/<day>/<i> 练习页（第 i 句，从 0 开始）
 //   #/settings                 设置
 import './style.css';
-import { player, recorder } from './audio';
+import { player } from './audio';
 import { libraryView } from './views/library';
 import { courseView } from './views/course';
 import { dayView } from './views/day';
@@ -33,8 +33,7 @@ async function render() {
   cleanup = undefined;
   player.stop();
   const path = decodeURIComponent(location.hash.replace(/^#/, ''));
-  // 离开练习页时释放麦克风
-  if (!path.match(routes[4][0])) recorder.release();
+  // 切换页面时不释放麦克风：iOS 每次重新申请都可能再弹一次权限。只在 App 进入后台时释放（见 audio.ts）
   for (const [re, view] of routes) {
     const m = path.match(re);
     if (m) {
