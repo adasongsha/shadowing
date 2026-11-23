@@ -27,8 +27,23 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(fetch(req).catch(() => caches.match('./', { cacheName: CACHE, ignoreVary: true })));
     return;
   }
-  // 内置内容：先用缓存（离线可用），同时在后台更新，下次打开就是新内容
-  if (new URL(req.url).pathname.includes('/content/')) {
+  const path = new URL(req.url).pathname;
+  // 内置样例课（版本号 + 课程包）：网络优先，保证拿到的版本号和课程包是同一版；断网时用缓存
+  if (path.includes('/content/sentences/')) {
+    e.respondWith(
+      caches.open(CONTENT_CACHE).then((c) =>
+        fetch(req)
+          .then((res) => {
+            if (res.ok) c.put(req, res.clone());
+            return res;
+          })
+          .catch(() => c.match(req, { ignoreVary: true })),
+      ),
+    );
+    return;
+  }
+  // 其它内置内容：先用缓存（离线可用），同时在后台更新，下次打开就是新内容
+  if (path.includes('/content/')) {
     e.respondWith(
       caches.open(CONTENT_CACHE).then(async (c) => {
         const hit = await c.match(req, { ignoreVary: true });

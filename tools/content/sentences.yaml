@@ -1,45 +1,278 @@
 # 样例句子课（原创句子，Kokoro 合成）。之后替换成你挑选、录制的句子。
-# 每组对应 App 里的一个 Day；hints 由 hints.py 自动生成，也可以在这里用 hints_override 手工覆盖。
+#
+# 每组（App 里的一个 Day）：
+#   title   标题
+#   intro   这一组讲解：what 是什么 / why 为什么会这样 / how 怎么练
+#   sentences:
+#     en      英文
+#     zh      中文
+#     stress  重读词（这句话的信息重点），会在 App 里加粗
+#     note    这一句的讲解：从「这句话想表达什么」出发，说明发音为什么这样变
+#
+# 连读 / 弱读 / 闪音 / 省略 的标注由 hints.py 自动生成。
 course_id: sample-sentences
 title: 美音连读样例课
 groups:
   - title: 连读：辅音连元音
+    intro:
+      what: >-
+        前一个词以辅音结尾、后一个词以元音开头时，这个辅音会直接「挪」到后一个词上，两个词听起来像一个词。
+        比如 pick it up 听起来像 "pi-ki-tup"。
+      why: >-
+        人说话的单位不是单词，而是意群：一口气说出来的一个意思。Pick it up 在说话人脑子里是一个动作、一个指令，
+        不是三个单词，所以会一口气说完，中间不停。不停顿，前一个词结尾的辅音自然就和后面的元音拼在了一起。
+        书面上的空格是写给眼睛看的，嘴里说话时并没有空格。
+      how: >-
+        先找意群：哪几个词合起来是一个意思。把一个意群当成一个长单词来读。
+        不要刻意去「连」，只要做到「不断」，连读自己就出来了。先慢后快。
     sentences:
-      - ["Pick it up.", "把它捡起来。"]
-      - ["Come on in.", "快进来吧。"]
-      - ["Can I have a look?", "我能看一眼吗？"]
-      - ["Hold on a second.", "稍等一下。"]
-      - ["It's an old idea.", "这是个老主意了。"]
-      - ["Turn it off.", "把它关掉。"]
+      - en: Pick it up.
+        zh: 把它捡起来。
+        stress: [Pick, up]
+        note: >-
+          场景：东西掉在地上，让对方捡起来。要传达的是「捡起来」这个动作，所以重点在 pick 和 up；
+          it 指的东西双方都知道，没有新信息，轻轻带过。整句是一个指令、一个意群，一口气说完：
+          pick 的 k 接上 it，it 的 t 接上 up，听起来像 "pi-ki-tup"。it up 中间的 t 还会变成闪音（第 3 组会讲）。
+      - en: Come on in.
+        zh: 快进来吧。
+        stress: [Come, in]
+        note: >-
+          场景：有人敲门，你热情地招呼。come on in 是一句完整的招呼语，语气热情、流畅，重音落在最后的 in 上。
+          三个词连成 "ka-mo-nin"。如果一个词一个词地蹦出来，听起来就生硬，不像欢迎。连读在这里传达的是语气。
+      - en: Can I have a look?
+        zh: 我能看一眼吗？
+        stress: [look]
+        note: >-
+          场景：想看看别人手里的东西。真正要问的是「看一下」，所以 look 最重。Can I 是礼貌请求的固定开头，
+          说得又快又轻，can 和 I 连成 "ka-nai"；have a 也连成 "ha-və"。前面越轻快，look 就越突出，
+          对方一下就听出你想要什么。
+      - en: Hold on a second.
+        zh: 稍等一下。
+        stress: [Hold, second]
+        note: >-
+          场景：打电话时让对方稍等。hold on 是一个词组（别挂），一个意思就一口气说：hold 的 d 接 on，
+          on 的 n 接 a，听起来像 "hol-do-nə second"，a 弱读成 /ə/。说得紧凑，正好符合「等一下」的急切。
+      - en: It's an old idea.
+        zh: 这是个老主意了。
+        stress: [old, idea]
+        note: >-
+          意思的重心是 old：这个想法不新鲜了。an、old、idea 都是元音开头，前面的 s、n、d 一个接一个挪过去：
+          it's an 读成 "it-sən"，an old 读成 "ə-nold"，old idea 读成 "ol-dai-dea"。如果每个元音前都停一下，
+          喉咙里会出现很多顿挫，听起来就是一字一顿。
+      - en: Turn it off.
+        zh: 把它关掉。
+        stress: [Turn, off]
+        note: >-
+          和 Pick it up 一样，是「动词 + it + 小词」的指令。重点在 turn 和 off（关掉），it 很弱，
+          整体读成 "tur-ni-toff"，it off 里的 t 也会变成闪音。这类短语动词在日常口语里非常多，学会一个，就会一类。
+
   - title: 弱读：功能词轻轻带过
+    intro:
+      what: >-
+        英语里的功能词（a, the, to, of, and, can, you, them 等）在句子里通常不读字典里的完整音，
+        而是读成带 /ə/ 的又轻又短的形式：to 读 /tə/，and 读 /ən/，can 读 /kən/。
+      why: >-
+        说话是为了传递信息，而信息主要装在实词里：名词、动词、形容词、副词。功能词只是把实词连起来的「胶水」。
+        说话的人自然会把力气花在实词上，让听的人抓住重点，功能词就被压得又轻又快。
+        英语的节奏也是这样来的：重读的地方像鼓点，大致等距，夹在中间的弱读音节被「挤」短。
+        所以弱读不是偷懒，而是在帮听的人划重点。每个词都读得一样重，对方反而听不出你想强调什么。
+        反过来，当一个功能词本身成了重点，它就会读回完整的音：比如在句末（What are you looking at?），
+        或者被强调（I CAN do it.）。
+      how: >-
+        先只读加粗的重读词，打出节奏（want… go… walk），再把弱读的小词塞进节拍之间。
+        小词塞得进去，节奏就对了。
     sentences:
-      - ["I want to go for a walk.", "我想去散散步。"]
-      - ["What do you think of it?", "你觉得怎么样？"]
-      - ["She can speak English and French.", "她会说英语和法语。"]
-      - ["I was going to call you.", "我正打算给你打电话。"]
-      - ["Give them a minute.", "给他们一点时间。"]
-      - ["It's a lot of fun.", "这非常有趣。"]
+      - en: I want to go for a walk.
+        zh: 我想去散散步。
+        stress: [want, go, walk]
+        note: >-
+          这句话的信息是「想 / 去 / 散步」：want、go、walk 是三个鼓点。to 读成 /tə/，for a 读成 /fɚ ə/，
+          都被挤在鼓点之间。随意的口语里，want to 还常说成 wanna。试着先只说 "want… go… walk"，
+          再把小词塞进去，节奏就出来了。
+      - en: What do you think of it?
+        zh: 你觉得怎么样？
+        stress: [What, think]
+        note: >-
+          问对方的看法，重点是 think（怎么想）。do you 被压成 /də jə/，快的时候几乎就是 "d'ya"；
+          of it 连读成 "ə-vit"。如果把 do you 读得清清楚楚，听起来像在质问「你到底怎么想」。
+          强弱一变，语气就变了。
+      - en: She can speak English and French.
+        zh: 她会说英语和法语。
+        stress: [speak, English, French]
+        note: >-
+          肯定句里的 can 读弱式 /kən/，因为重点是她会说哪些语言，而不是「能不能」。要注意：can 读成完整的 /kæn/，
+          母语者容易听成 can't，因为 can't 通常读得比较重。and 读成 /ən/，d 也省掉了，"English 'n French"。
+      - en: I was going to call you.
+        zh: 我正打算给你打电话。
+        stress: [call]
+        note: >-
+          解释原因时常说的话，重点是 call（打电话）。was 读成 /wəz/，going to 在随意口语里会变成 gonna，
+          句末的 you 也很轻。整句只有一个高峰 call，前面一路轻快地滑上去。
+      - en: Give them a minute.
+        zh: 给他们一点时间。
+        stress: [Give, minute]
+        note: >-
+          them 弱读成 /ðəm/，口语里甚至只剩 'em（"give 'em a minute"）。为什么能弱到这个程度？
+          因为「他们」是谁，双方都知道，它没有新信息；需要听清的是 give 和 minute。them a 再连读成 "ðə-mə"。
+      - en: It's a lot of fun.
+        zh: 这非常有趣。
+        stress: [lot, fun]
+        note: >-
+          a lot of 是一个整体，读成 "ə-la-dəv"：a 弱读，lot of 连读，t 变闪音，of 弱读成 /əv/。
+          读顺了这个组合，a cup of、a bit of 这一整类表达也就会了。重点落在 lot 和 fun 上。
+
   - title: 闪音：元音之间的 t
+    intro:
+      what: >-
+        美音里，t 夹在两个元音之间、而且后一个音节不重读时，舌尖不再「顶住、憋气、爆开」，
+        而是在上齿龈上快速轻弹一下，听起来像轻的 d：water 读成 "wa-der"，get a 读成 "ge-də"。
+      why: >-
+        一个完整的 t 要舌尖顶住、憋住气、再爆开。夹在两个元音之间这样做太费劲，还会把流畅的元音切断。
+        说话一快、人一放松，舌头就只「碰一下」带过去。这是美式英语最有标志性的特征之一（英音通常保留清楚的 t）。
+        它不只发生在单词内部，词和词之间也会，只要 t 落在元音中间，比如 get it、put it on。
+        你读成清楚的 t 也不会被误解，但如果不知道 a little 会读成 "a li-dl"，就很难听出来。会说，才更会听。
+      how: >-
+        把这个 t 想成一个又轻又快的 d：舌尖弹一下就走，不要停留。注意只在不重读的位置这样读，
+        table、today 开头的 t 在重读音节里，仍然是清楚、送气的 t。
     sentences:
-      - ["Can I get a bottle of water?", "能给我一瓶水吗？"]
-      - ["It's a little better today.", "今天好一点了。"]
-      - ["Put it on the table.", "把它放在桌子上。"]
-      - ["I forgot about it.", "我把这事忘了。"]
-      - ["What a beautiful city!", "多美的城市啊！"]
-      - ["Let it go.", "随它去吧。"]
+      - en: Can I get a bottle of water?
+        zh: 能给我一瓶水吗？
+        stress: [bottle, water]
+        note: >-
+          点水时最常说的一句。要的是「一瓶水」，所以 bottle 和 water 是重点，而它们正好都有闪音：
+          bottle 读 "ba-dl"，water 读 "wa-dɚ"。前面的 Can I get a 是点单的固定开头，一口气滑过去，
+          读成 "kə-nai-ge-də"，get a 的 t 也变成了闪音。
+      - en: It's a little better today.
+        zh: 今天好一点了。
+        stress: [little, better, today]
+        note: >-
+          生病或心情不好之后说「今天好些了」。little 和 better 里的 t 都在两个元音之间：一个读 "li-dl"，
+          一个读 "be-dɚ"。这句话的语气轻松、带点宽慰，闪音让整句听起来柔和、顺滑。
+          today 的 t 在重读音节开头，保持清楚的 t。
+      - en: Put it on the table.
+        zh: 把它放在桌子上。
+        stress: [Put, table]
+        note: >-
+          指令句，重点是 put 和 table。put it on 三个词之间连了两次，两个 t 都变成闪音："pu-di-don"。
+          对比一下 table：它的 t 在重读音节开头，所以是完整、送气的 t。闪音只发生在不重读的位置。
+      - en: I forgot about it.
+        zh: 我把这事忘了。
+        stress: [forgot]
+        note: >-
+          道歉或解释时说的话，重点是 forgot（忘了）。forgot about it 里，got 的 t 接 a，about 的 t 接 it，
+          两个闪音，读成 "fɚ-ga-də-bau-dit"。forgot 之后的部分没有新信息，只是补充，所以又快又轻。
+      - en: What a beautiful city!
+        zh: 多美的城市啊！
+        stress: [beautiful, city]
+        note: >-
+          感叹句，情绪落在 beautiful 和 city 上。what a 读成 "wa-də"；beautiful 的 t 在两个元音之间，
+          读成 "byu-də-fl"；city 读成 "si-di"。整句是一个上扬的感叹，闪音让它听起来自然、不费力。
+      - en: Let it go.
+        zh: 随它去吧。
+        stress: [Let, go]
+        note: >-
+          let it 连读加闪音，读成 "le-dit"。it 结尾的 t 后面紧跟辅音 g，就不爆破了：舌头摆好 t 的位置，
+          但不放气，直接接 go。同一个 t，后面是元音就闪，后面是辅音就停，读法看它的「邻居」。
+
   - title: 省略：辅音之间的 t 和 d
+    intro:
+      what: >-
+        几个辅音挤在一起时，中间的 t 或 d 常常不发出来：next day 听起来是 "nex day"，
+        I don't know 里的 t 几乎听不见。还有一种相关的现象叫「不爆破」：t、d、p、k 后面紧跟辅音时，
+        舌头或嘴唇只摆好姿势，不把气放出来。
+      why: >-
+        连着发三个辅音很费劲：从 s 到 t 再到 d，舌头要跑好几个位置。说快的时候，中间那个最难、也最不重要的 t 或 d
+        就被跳过了。为什么可以跳过？因为不影响理解：next day 少了 t，没有人会听不懂。
+        语言总是在「省力」和「听得懂」之间自动找平衡：只要意思不丢，能省就省。
+        所以省略不是随便省。I don't know 的否定意思靠的是 don't 的元音 /oʊ/ 和语调，并不靠那个 t。
+      how: >-
+        读到被省的位置时，舌头在 t 的位置停一个极短的瞬间，再接下一个词。这比完全不管它更地道，
+        也能保住节奏。
     sentences:
-      - ["I don't know.", "我不知道。"]
-      - ["Just give me a minute.", "给我一分钟。"]
-      - ["She left the next day.", "她第二天就走了。"]
-      - ["I must be going.", "我得走了。"]
-      - ["That's the best part.", "那是最精彩的部分。"]
-      - ["It's the first time.", "这是第一次。"]
+      - en: I don't know.
+        zh: 我不知道。
+        stress: [don't, know]
+        note: >-
+          最高频的口语之一。don't 的 t 夹在 n 和 n 之间，几乎完全消失，读成 "I don(t) know"，
+          随意的时候甚至变成 "I dunno"。否定的意思靠 don't 的元音 /oʊ/ 和语调传达，
+          听的人不需要那个 t，也知道你在说「不知道」。
+      - en: Just give me a minute.
+        zh: 给我一分钟。
+        stress: [give, minute]
+        note: >-
+          请对方等一下时的话。just 的 t 夹在 s 和 g 之间，被省掉，读成 "jus(t) give"。give me a 一气呵成。
+          重点是 minute：就一分钟。整句是一个「缓冲」的语气，说得轻快才不显得着急。
+      - en: She left the next day.
+        zh: 她第二天就走了。
+        stress: [left, next, day]
+        note: >-
+          讲故事时常用的一句。left the 里，t 夹在 f 和 th 之间，省掉；next day 里，t 夹在 ks 和 d 之间，也省掉。
+          整句读成 "she lef(t) the nex(t) day"。时间信息 next day 是重点，要读清楚，但靠的不是那两个 t。
+      - en: I must be going.
+        zh: 我得走了。
+        stress: [going]
+        note: >-
+          礼貌告辞的说法。must be 里，t 夹在 s 和 b 之间，省掉，读成 "mus(t) be"。重点是 going：我该走了。
+          前面的 I must be 轻快地带过，告辞的语气就委婉而不突兀。
+      - en: That's the best part.
+        zh: 那是最精彩的部分。
+        stress: [best, part]
+        note: >-
+          夸奖时说的话。best part 里，t 夹在 s 和 p 之间，省掉，读成 "bes(t) part"。两个重读词 best、part 挨在一起，
+          正因为省了 t，节奏才不会被卡住。句末 part 的 t 常常不爆破，只是轻轻收住。
+      - en: It's the first time.
+        zh: 这是第一次。
+        stress: [first, time]
+        note: >-
+          first time 里，t 夹在 s 和 t 之间，两个 t 合成一个，读成 "firs(t) time"。这个组合非常常见：
+          first thing、last time、next time，规律都一样，掌握一个就能处理一大类。
+
   - title: 综合练习
+    intro:
+      what: >-
+        真实的句子里，连读、弱读、闪音、省略往往同时出现。它们背后其实是同一件事：
+        说话的人把力气用在要表达的意思上，其他部分越顺越好。
+      why: >-
+        这些规则是从真实的说话里总结出来的：先有人这样说，才有了这些名字。所以练习时永远从
+        「这句话想表达什么」出发：意思的重点在哪里，哪里就读得清楚、有力；其余部分自然会变轻、变快、连在一起。
+        规则只是帮你看清楚发生了什么，而不是背下来再套用。
+      how: >-
+        每句先听原音，找出重读的词（意思在哪里），再看提示，弄明白每处变化为什么会发生，最后跟读。
+        目标不是记住规则，而是听到一句话时，能感觉到它的重心和节奏。
     sentences:
-      - ["What are you up to this weekend?", "这周末你打算做什么？"]
-      - ["I'll get back to you as soon as I can.", "我会尽快回复你。"]
-      - ["Did you get a chance to look at it?", "你有机会看一下吗？"]
-      - ["Let me think about it for a bit.", "让我想一会儿。"]
-      - ["It's not as hard as it looks.", "没有看起来那么难。"]
-      - ["Thanks a lot for all of your help.", "非常感谢你的帮助。"]
+      - en: What are you up to this weekend?
+        zh: 这周末你打算做什么？
+        stress: [up, weekend]
+        note: >-
+          朋友之间问周末计划。What are you 被压缩成 "wa-dɚ-yə"：what are 连读加闪音，are 和 you 都弱读，
+          快的时候听起来像 "whaddaya"。重点是 up to（在忙什么）和 weekend。you up 之间会自然带出一个轻 /w/。
+      - en: I'll get back to you as soon as I can.
+        zh: 我会尽快回复你。
+        stress: [back, soon, can]
+        note: >-
+          工作中常用的回复。get back 里，t 后面是辅音，不爆破；to you 都弱读；as soon as 读成 "ə(z) soo-nə-zai"。
+          句末的 can 读完整的 /kæn/：它在句末，又是这句承诺的落点。
+      - en: Did you get a chance to look at it?
+        zh: 你有机会看一下吗？
+        stress: [chance, look]
+        note: >-
+          跟进工作时的问法。did you 里，d 和 y 融合成 /dʒ/，听起来像 "didja"。get a 是闪音，
+          look at it 连读加闪音，读成 "loo-kə-dit"。重点是 chance 和 look，其余部分都是语法的「外壳」。
+      - en: Let me think about it for a bit.
+        zh: 让我想一会儿。
+        stress: [think, bit]
+        note: >-
+          委婉地说「我考虑一下」。let me 的 t 不爆破，口语里常说成 "lemme"。about it 闪音加连读，
+          for a bit 弱读加连读，读成 "fɚ-ə-bit"。重点是 think，句末 bit 的 t 轻轻收住。语气越松弛，越像真的在思考。
+      - en: It's not as hard as it looks.
+        zh: 没有看起来那么难。
+        stress: [not, hard, looks]
+        note: >-
+          鼓励别人时说的话。not as 闪音加连读，读成 "na-dəz"；两个 as 都弱读成 /əz/。重点是 not 和 hard：
+          「没那么难」，否定和难度才是信息的核心。as it 连读成 "ə-zit"。
+      - en: Thanks a lot for all of your help.
+        zh: 非常感谢你的帮助。
+        stress: [Thanks, lot, help]
+        note: >-
+          thanks a lot 连读成 "than-ksə-lot"；lot 的 t 后面是 f，不爆破；for all of your 一串功能词全部弱读加连读，
+          读成 "fɚ-rɔ-lə-vjɚ"，听起来几乎是一个词。真正要传达的只有「谢谢」「很多」和「帮助」。

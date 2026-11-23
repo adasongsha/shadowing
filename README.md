@@ -180,7 +180,7 @@ App 自带的内容都是**可以公开发布、可以商用**的：原创句子
 | 查词（约 3.7 万词 + 2.8 万词形） | ECDICT 中文释义 + CMUdict 美音音标 | MIT / BSD | `build_dict.py` |
 | 舌位剖面图（26 张） | Richard Wright & Dan McCloy, phonetics-teaching-assets | CC0 | `fetch_sagittal.py` |
 | 音标（41 个美音音素） | `phonemes.yaml`（发音要领、例词，手工维护） | 原创 | `build_ipa.py` |
-| 样例句子课（5 组 30 句） | `sentences.yaml`（原创句子） | 原创 | `build_sentences.py` |
+| 样例句子课（5 组 30 句，含讲解） | `sentences.yaml`（原创句子、每组讲解、每句讲解、重读词） | 原创 | `build_sentences.py` |
 | 例词、句子音频 | Kokoro-82M 语音合成（`af_heart` 美音女声） | Apache 2.0 | `tts.py` |
 | 连读 / 弱读 / 闪音 / 省略提示 | CMUdict + 规则自动标注 | — | `hints.py` |
 
@@ -211,7 +211,9 @@ cd tools/content
 .venv/bin/python hints.py "Put it on the table."   # 单独看某句的自动标注
 ```
 
-**改内容**：改 `phonemes.yaml`（发音要领、例词）或 `sentences.yaml`（句子），再运行对应脚本。音频已经合成过、文字没变的会复用，加 `--force` 全部重做。
+**改内容**：改 `phonemes.yaml`（发音要领、例词）或 `sentences.yaml`（句子），再运行对应脚本。
+
+`sentences.yaml` 里每组有 `intro`（是什么 / 为什么会这样 / 怎么练），每句有 `stress`（重读词，App 里加粗）和 `note`（这句话为什么这样读）。讲解的思路是从表达出发：先说这句话想传达什么、重点在哪里，再说其它部分为什么会连、弱、省。重新生成后，已经装过样例课的手机会自动更新到新版本，录音和标记都保留。音频已经合成过、文字没变的会复用，加 `--force` 全部重做。
 
 **以后换成自己的录音**：把录好的 m4a 放到 `app/public/content/ipa/audio/<单词>.m4a`，或者 `data/work/sample-sentences/audio/<句子id>.m4a`，覆盖合成的文件即可（脚本不会覆盖已存在的文件）。
 
@@ -227,10 +229,11 @@ cd tools/content
 
 `manifest.json` 见 SPEC 2.6。重复导入同一个 `course_id` 会按句子 id 合并：同 id 覆盖、新 id 追加、其它天保留。
 
-每句可以多一个可选的 `hints` 字段（没有也照常能用）：
+每句可以多几个可选字段（没有也照常能用）：`note` 是这一句的讲解，`hints` 是发音提示。每天（day）也可以有可选的 `intro: {what, why, how}`。`hints` 的格式：
 
 ```json
 "hints": [
+  {"type": "stress", "from": 0, "to": 4, "note": "重读：这句话的信息重点"},
   {"type": "link",  "from": 3, "to": 6, "note": "连读：前词结尾的辅音直接接到后词的元音上"},
   {"type": "weak",  "from": 15, "to": 18, "note": "弱读 /ðə/"},
   {"type": "flap",  "from": 10, "to": 11, "note": "闪音：t 夹在元音之间，听起来像轻 d"},

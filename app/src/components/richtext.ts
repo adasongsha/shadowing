@@ -70,4 +70,25 @@ export function renderSentence(text: string, hints: Hint[] = [], onWord?: (t: Wo
   return root;
 }
 
-export const HINT_LABEL: Record<Hint['type'], string> = { link: '连读', weak: '弱读', flap: '闪音', elide: '省略' };
+export const HINT_LABEL: Record<Hint['type'], string> = {
+  stress: '重读',
+  link: '连读',
+  weak: '弱读',
+  flap: '闪音',
+  elide: '省略',
+};
+
+/** 图例：说明每种标记长什么样 */
+export function hintLegend(hints: Hint[] = []) {
+  const types = new Set(hints.map((x) => x.type));
+  const item = (t: Hint['type'], sample: Node) => types.has(t) && h('span', { class: 'lg' }, sample, HINT_LABEL[t]);
+  return h(
+    'p',
+    { class: 'hint-legend' },
+    item('stress', h('b', { class: 'h-stress' }, 'Aa')),
+    item('link', h('span', { class: 'lg-link' }, '‿')),
+    item('weak', h('span', { class: 'h-weak' }, 'a')),
+    item('flap', h('span', { class: 'h-flap' }, 't')),
+    item('elide', h('span', { class: 'h-elide' }, 't')),
+  );
+}

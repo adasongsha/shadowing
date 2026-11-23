@@ -11,7 +11,8 @@ import {
   type Mark,
   type Recording,
 } from '../db';
-import { renderSentence } from '../components/richtext';
+import { hasIntro, introCard, noteCard } from '../components/explain';
+import { hintLegend, renderSentence } from '../components/richtext';
 import { openWordCard } from '../components/wordcard';
 import { enc, go } from '../nav';
 import { settings, type TextMode } from '../settings';
@@ -52,13 +53,18 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
   const recIcon = bRec.querySelector('.ic')!;
 
   const hasHints = !!s.hints?.length;
+  const hasStress = !!s.hints?.some((x) => x.type === 'stress');
   const text = h(
     'div',
     { class: 'sentence-text' },
-    h('p', { class: 'sentence', lang: 'en' }, renderSentence(s.text, s.hints, (t) => openWordCard(t.word, t.hints))),
+    h(
+      'p',
+      { class: `sentence${hasStress ? ' has-stress' : ''}`, lang: 'en' },
+      renderSentence(s.text, s.hints, (t) => openWordCard(t.word, t.hints)),
+    ),
     s.zh && h('p', { class: 'translation' }, s.zh),
   );
-  const textWrap = h('div', { class: 'sentence-wrap' }, text);
+  const textWrap = h('div', { class: 'sentence-wrap' }, text, hasHints && hintLegend(s.hints));
   // 捕获阶段处理「偷看」：文本被隐藏时，第一下点击只是显示出来，不触发查词
   textWrap.addEventListener(
     'click',
@@ -186,6 +192,8 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     textWrap,
     h('div', { class: 'controls' }, bOrig, bMine, bRec, bCmp),
     h('div', { class: 'options' }, rateSeg, h('div', { class: 'marks' }, marks)),
+    s.note && noteCard(s.note, st.noteOpen, (open) => settings.set({ noteOpen: open })),
+    hasIntro(day.intro) && introCard(day.intro!, `关于「${day.title}」`, false),
     history,
   );
 

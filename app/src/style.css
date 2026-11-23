@@ -1132,3 +1132,113 @@ h2 {
 .entry {
   padding: 18px;
 }
+
+/* ---------- 重读 + 图例 + 讲解卡片 ---------- */
+.show-hints .sentence.has-stress {
+  font-weight: 500;
+}
+.show-hints .rich .h-stress {
+  font-weight: 800;
+}
+.hint-legend {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.show-hints .hint-legend {
+  display: flex;
+}
+.hide-text .sentence-text:not(.peek) ~ .hint-legend {
+  visibility: hidden;
+}
+.hint-legend .lg {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.hint-legend .lg > :first-child {
+  font-size: 15px;
+  color: var(--text);
+}
+.hint-legend .h-stress {
+  font-weight: 800;
+}
+.hint-legend .lg-link {
+  color: var(--accent);
+  font-weight: 700;
+}
+.hint-legend .h-weak {
+  color: var(--weak);
+}
+.hint-legend .h-flap {
+  color: var(--flap);
+  text-decoration: underline wavy;
+  text-underline-offset: 3px;
+}
+.hint-legend .h-elide {
+  color: var(--elide);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+.tag-stress {
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+}
+.explain {
+  padding: 0;
+  margin-top: 4px;
+}
+.explain summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.explain summary::-webkit-details-marker {
+  display: none;
+}
+.explain summary::after {
+  content: '';
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+.explain[open] summary::after {
+  transform: rotate(-135deg);
+}
+.explain-body {
+  padding: 0 16px 16px;
+  line-height: 1.7;
+  font-size: 16px;
+}
+.explain-body p {
+  margin: 0;
+}
+.explain-body section + section {
+  margin-top: 12px;
+}
+.explain-body h3 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+.hide-text .explain.note {
+  display: none; /* 纯听模式下不剧透句子内容 */
+}
+.content > .explain.intro {
+  margin: 12px 0;
+}

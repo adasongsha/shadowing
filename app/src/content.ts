@@ -63,18 +63,32 @@ export function fetchBlob(path: string) {
 
 // ---------- 内置句子课 ----------
 
-export const BUILTIN_SENTENCES = { id: 'sample-sentences', zip: 'sentences/sample.zip' };
+export const BUILTIN_SENTENCES = { id: 'sample-sentences', zip: 'sentences/sample.zip', version: 'sentences/sample.json' };
 const DISMISS_KEY = 'shadowing.builtin.dismissed';
 
-/** 内置样例课没装过就装上（用户手动删除过则不再自动装） */
+/**
+ * 内置样例课没装过就装上；装过但内容有新版本就更新（按句子 id 合并，录音和标记都保留）。
+ * 用户手动删除过则不再自动装。返回 true 表示装了或更新了。
+ */
 export async function ensureBuiltinCourse(onProgress?: (m: string) => void) {
-  if (await getCourse(BUILTIN_SENTENCES.id)) return false;
-  try {
-    if (localStorage.getItem(DISMISS_KEY)) return false;
-  } catch {
-    /* 忽略 */
+  const existing = await getCourse(BUILTIN_SENTENCES.id);
+  if (existing) {
+    let latest: string | undefined;
+    try {
+      latest = (await (await fetchOk(contentUrl(BUILTIN_SENTENCES.version))).json()).version;
+    } catch {
+      return false; // 离线等情况：继续用已安装的版本
+    }
+    if (!latest || latest === existing.version) return false;
+    onProgress?.('样例课有更新…');
+  } else {
+    try {
+      if (localStorage.getItem(DISMISS_KEY)) return false;
+    } catch {
+      /* 忽略 */
+    }
+    onProgress?.('正在准备样例课…');
   }
-  onProgress?.('正在准备样例课…');
   const blob = await (await fetchOk(contentUrl(BUILTIN_SENTENCES.zip))).blob();
   await importPack(blob, onProgress);
   return true;

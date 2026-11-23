@@ -1,4 +1,5 @@
 // 句子列表：点一句进入练习页。
+import { hasIntro, introCard } from '../components/explain';
 import { getCourse, progressMap, skey } from '../db';
 import { enc } from '../nav';
 import { settings } from '../settings';
@@ -48,6 +49,7 @@ export async function dayView(root: HTMLElement, [courseId, dayStr]: string[]) {
         iconEl('play'),
         '开始练习',
       ),
+      hasIntro(day.intro) && introCard(day.intro!, '这一组讲什么', true),
       h('div', { class: 'list card flush' }, rows),
     ),
   );

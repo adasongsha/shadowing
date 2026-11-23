@@ -2,9 +2,9 @@
 // 音频统一存成 ArrayBuffer + MIME（而不是 Blob），规避旧版 iOS Safari 在 IndexedDB 里存 Blob 的兼容问题。
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
 
-/** 连读 / 弱读 / 闪音 / 省略 提示；from/to 是英文原文里的字符位置（左闭右开） */
+/** 重读 / 连读 / 弱读 / 闪音 / 省略 提示；from/to 是英文原文里的字符位置（左闭右开） */
 export interface Hint {
-  type: 'link' | 'weak' | 'flap' | 'elide';
+  type: 'stress' | 'link' | 'weak' | 'flap' | 'elide';
   from: number;
   to: number;
   note?: string;
@@ -19,11 +19,21 @@ export interface Sentence {
   duration?: number;
   /** 发音提示（可选） */
   hints?: Hint[];
+  /** 这一句的讲解：想表达什么、发音为什么这样变（可选） */
+  note?: string;
+}
+
+/** 一组（一天）的讲解：是什么 / 为什么会这样 / 怎么练 */
+export interface DayIntro {
+  what?: string;
+  why?: string;
+  how?: string;
 }
 
 export interface Day {
   day: number;
   title: string;
+  intro?: DayIntro;
   sentences: Sentence[];
 }
 
@@ -34,6 +44,8 @@ export interface Course {
   imported_at: number;
   /** App 内置的公开课程（不是用户导入的） */
   builtin?: boolean;
+  /** 内置课程的内容版本，用于自动更新 */
+  version?: string;
   days: Day[];
 }
 

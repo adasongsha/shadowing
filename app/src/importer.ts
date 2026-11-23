@@ -19,7 +19,8 @@ export interface ImportResult {
   merged: boolean;
 }
 
-const HINT_TYPES = new Set(['link', 'weak', 'flap', 'elide']);
+const HINT_TYPES = new Set(['stress', 'link', 'weak', 'flap', 'elide']);
+const str = (x: any) => (typeof x === 'string' && x.trim() ? x : undefined);
 function validHint(x: any) {
   return x && HINT_TYPES.has(x.type) && Number.isInteger(x.from) && Number.isInteger(x.to) && x.to > x.from;
 }
@@ -42,6 +43,7 @@ export async function importPack(file: Blob, onProgress?: (msg: string) => void)
   const incomingDays: Day[] = manifest.days.map((d: any) => ({
     day: Number(d.day),
     title: d.title || `Day ${d.day}`,
+    intro: d.intro && typeof d.intro === 'object' ? { what: str(d.intro.what), why: str(d.intro.why), how: str(d.intro.how) } : undefined,
     sentences: (d.sentences || []).map((s: any) => ({
       id: String(s.id),
       text: String(s.text ?? ''),
@@ -49,6 +51,7 @@ export async function importPack(file: Blob, onProgress?: (msg: string) => void)
       audio: String(s.audio),
       duration: typeof s.duration === 'number' ? s.duration : undefined,
       hints: Array.isArray(s.hints) ? s.hints.filter(validHint) : undefined,
+      note: str(s.note),
     })),
   }));
 
@@ -76,6 +79,7 @@ export async function importPack(file: Blob, onProgress?: (msg: string) => void)
     created_at: manifest.created_at,
     imported_at: Date.now(),
     builtin: !!manifest.builtin || undefined,
+    version: str(manifest.version),
     days: mergeDays(existing?.days ?? [], incomingDays),
   };
 
@@ -96,6 +100,7 @@ function mergeDays(old: Day[], incoming: Day[]): Day[] {
       continue;
     }
     od.title = nd.title;
+    od.intro = nd.intro;
     const idx = new Map(od.sentences.map((s, i) => [s.id, i]));
     for (const s of nd.sentences) {
       const at = idx.get(s.id);

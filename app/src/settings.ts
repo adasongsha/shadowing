@@ -9,11 +9,13 @@ export interface Settings {
   focusMode: boolean;
   /** 显示连读 / 弱读等发音提示 */
   showHints: boolean;
+  /** 练习页「这句话为什么这样读」默认展开 */
+  noteOpen: boolean;
   /** 录完立即释放麦克风：如果实测录音后回放声音很小（走了听筒），打开它 */
   releaseMicAfterRecord: boolean;
 }
 
-const DEFAULTS: Settings = { rate: 1, textMode: 'all', focusMode: false, showHints: true, releaseMicAfterRecord: false };
+const DEFAULTS: Settings = { rate: 1, textMode: 'all', focusMode: false, showHints: true, noteOpen: true, releaseMicAfterRecord: false };
 const KEY = 'shadowing.settings';
 
 let cache: Settings | null = null;
