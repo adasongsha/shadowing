@@ -685,3 +685,450 @@ h2 {
 .focus .pager .btn {
   min-height: 64px;
 }
+
+/* ---------- 通用小件（v2） ---------- */
+:root {
+  --weak: #8e8e93;
+  --flap: #c2410c;
+  --elide: #d1495b;
+  --sheet-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --weak: #8a8a91;
+    --flap: #fb923c;
+    --elide: #ff6b7d;
+    --sheet-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
+  }
+}
+.center {
+  text-align: center;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin: 18px 4px 8px;
+}
+.card .section-title {
+  margin-top: 0;
+}
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+  padding: 0 7px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  vertical-align: 2px;
+}
+.tag-link {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tag-weak {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.tag-flap {
+  background: rgba(194, 65, 12, 0.12);
+  color: var(--flap);
+}
+.tag-elide {
+  background: rgba(209, 73, 91, 0.12);
+  color: var(--elide);
+}
+.prose ul {
+  padding-left: 1.2em;
+}
+.prose li {
+  margin: 6px 0;
+}
+.prose a,
+.content a:not(.btn):not(.row):not(.card):not(.chip):not(.ipa-cell):not(.search-entry):not(.module) {
+  color: var(--accent);
+}
+
+/* ---------- 首页 ---------- */
+.search-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap);
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 16px;
+}
+.modules {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.module {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+.module.soon {
+  opacity: 0.7;
+}
+.module-sym {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Grande', 'Times New Roman', serif;
+}
+.module-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.module-title {
+  font-size: 19px;
+  font-weight: 600;
+}
+.module-sub {
+  font-size: 14px;
+  color: var(--muted);
+}
+.module > .ic {
+  color: var(--muted);
+}
+
+/* ---------- 音标 ---------- */
+.ipa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 8px;
+}
+.ipa-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 4px 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+.ipa-cell:active {
+  background: var(--surface-2);
+}
+.ipa-cell.done::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+.ipa-sym,
+.word-ipa,
+.sheet-ipa {
+  font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Grande', 'Times New Roman', serif;
+}
+.ipa-sym {
+  font-size: 22px;
+  font-weight: 600;
+}
+.ipa-eg {
+  font-size: 13px;
+  color: var(--muted);
+}
+.phoneme {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sagittal {
+  margin: 0;
+  background: #fff; /* 剖面图是白底线稿，深色模式也放在白色卡片上 */
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+}
+.sagittal-imgs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.sagittal-imgs img {
+  width: 100%;
+  max-width: 240px;
+  min-width: 0;
+  flex: 1;
+  height: auto;
+}
+.sagittal-arrow {
+  color: #6e6e73;
+  font-size: 22px;
+}
+.sagittal figcaption {
+  color: #6e6e73;
+  margin-top: 6px;
+}
+.sagittal.empty-fig {
+  background: var(--surface);
+  padding: 28px 16px;
+}
+.tip p {
+  margin: 0;
+  line-height: 1.6;
+}
+.words {
+  overflow: hidden;
+}
+.word-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 16px;
+  border-bottom: 0.5px solid var(--line);
+}
+.word-row:last-child {
+  border-bottom: 0;
+}
+.word-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: inherit;
+  text-align: left;
+}
+.word-w {
+  font-size: 19px;
+  font-weight: 600;
+}
+.word-w mark {
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.word-ipa {
+  font-size: 14px;
+  color: var(--muted);
+}
+.mini-row {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+.mini {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.mini svg {
+  width: 18px;
+  height: 18px;
+}
+.mini.orig {
+  color: var(--accent);
+}
+.mini.rec {
+  color: var(--rec);
+}
+.mini.rec.recording {
+  background: var(--rec);
+  color: #fff;
+}
+.mini.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.mini:disabled {
+  opacity: 0.35;
+}
+.pair-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pair-links .chip {
+  text-decoration: none;
+  color: inherit;
+}
+.mynote {
+  margin-top: 14px;
+}
+.pager.inline {
+  position: static;
+  margin-top: 12px;
+  background: none;
+  padding: 0;
+}
+.pager.inline .btn[aria-disabled='true'] {
+  visibility: hidden;
+}
+
+/* ---------- 连读弱读提示 ---------- */
+.rich .w {
+  cursor: pointer;
+  border-radius: 4px;
+}
+.rich .w:active {
+  background: var(--accent-soft);
+}
+.show-hints .sentence {
+  line-height: 1.75;
+}
+.show-hints .rich .h-weak {
+  color: var(--weak);
+  font-weight: 400;
+  font-size: 0.86em;
+}
+.show-hints .rich .h-link {
+  color: var(--accent);
+}
+.show-hints .rich .h-flap {
+  color: var(--flap);
+  text-decoration: underline wavy;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+.show-hints .rich .h-elide {
+  color: var(--elide);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  opacity: 0.75;
+}
+.rich .lk {
+  position: relative;
+}
+.show-hints .rich .lk::after {
+  content: '‿';
+  position: absolute;
+  left: 50%;
+  bottom: -0.42em;
+  transform: translateX(-50%) scaleX(1.6);
+  color: var(--accent);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* ---------- 查词卡片 ---------- */
+.sheet-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.2s;
+}
+.sheet-wrap.open {
+  background: rgba(0, 0, 0, 0.25);
+}
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border-radius: 18px 18px 0 0;
+  box-shadow: var(--sheet-shadow);
+  padding: 8px max(20px, var(--safe-l)) calc(var(--safe-b) + 20px) max(20px, var(--safe-r));
+  transform: translateY(100%);
+  transition: transform 0.2s ease-out;
+}
+.sheet-wrap.open .sheet {
+  transform: none;
+}
+.sheet-grip {
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--line);
+  margin: 0 auto 12px;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.sheet-word {
+  font-size: 26px;
+  font-weight: 700;
+}
+.sheet-ipa {
+  font-size: 18px;
+  color: var(--muted);
+}
+.sheet-head .say {
+  margin-left: auto;
+  color: var(--accent);
+}
+.sheet-zh p {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+.sheet-tags {
+  margin: 8px 0 0 -6px;
+}
+.sheet-hints {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 12px 0 0;
+  border-top: 0.5px solid var(--line);
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+}
+.sheet-hints .tag {
+  margin: 0 8px 0 0;
+}
+
+/* ---------- 查词页 ---------- */
+.search-input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 16px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+}
+.dict-result {
+  margin-top: 12px;
+}
+.entry {
+  padding: 18px;
+}

@@ -1,0 +1,26 @@
+# 内置公开内容的生成参数（路径相对仓库根目录）
+
+dict:
+  src_dir: data/dict              # ecdict.csv、cmudict.dict（不进 git）
+  out_dir: app/public/content/dict
+  max_rank: 30000                 # 词频排名在此之内的词都收；有考试标签的词也收
+  max_lines: 4                    # 中文释义最多保留几行
+
+tts:
+  model: data/models/kokoro/kokoro-v1.0.onnx
+  voices: data/models/kokoro/voices-v1.0.bin
+  voice: af_heart                 # 美音女声；男声可选 am_michael
+  speed: 0.95
+  lang: en-us
+  bitrate: 80k
+  loudnorm_i: -16
+
+ipa:
+  src: tools/content/phonemes.yaml
+  out_dir: app/public/content/ipa
+  commons_dir: data/commons       # 从维基共享资源下载的原始文件（不进 git）
+
+sentences:
+  src: tools/content/sentences.yaml
+  out: app/public/content/sentences/sample.zip
+  work_dir: data/work/sample-sentences

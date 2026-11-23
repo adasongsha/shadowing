@@ -19,7 +19,12 @@ export interface ImportResult {
   merged: boolean;
 }
 
-export async function importPack(file: File, onProgress?: (msg: string) => void): Promise<ImportResult> {
+const HINT_TYPES = new Set(['link', 'weak', 'flap', 'elide']);
+function validHint(x: any) {
+  return x && HINT_TYPES.has(x.type) && Number.isInteger(x.from) && Number.isInteger(x.to) && x.to > x.from;
+}
+
+export async function importPack(file: Blob, onProgress?: (msg: string) => void): Promise<ImportResult> {
   onProgress?.('解压中…');
   const zip = await JSZip.loadAsync(file);
   const mf = zip.file('manifest.json');
@@ -43,6 +48,7 @@ export async function importPack(file: File, onProgress?: (msg: string) => void)
       zh: s.zh ? String(s.zh) : undefined,
       audio: String(s.audio),
       duration: typeof s.duration === 'number' ? s.duration : undefined,
+      hints: Array.isArray(s.hints) ? s.hints.filter(validHint) : undefined,
     })),
   }));
 
@@ -69,6 +75,7 @@ export async function importPack(file: File, onProgress?: (msg: string) => void)
     title: manifest.title || existing?.title || courseId,
     created_at: manifest.created_at,
     imported_at: Date.now(),
+    builtin: !!manifest.builtin || undefined,
     days: mergeDays(existing?.days ?? [], incomingDays),
   };
 

@@ -1,0 +1,45 @@
+# 样例句子课（原创句子，Kokoro 合成）。之后替换成你挑选、录制的句子。
+# 每组对应 App 里的一个 Day；hints 由 hints.py 自动生成，也可以在这里用 hints_override 手工覆盖。
+course_id: sample-sentences
+title: 美音连读样例课
+groups:
+  - title: 连读：辅音连元音
+    sentences:
+      - ["Pick it up.", "把它捡起来。"]
+      - ["Come on in.", "快进来吧。"]
+      - ["Can I have a look?", "我能看一眼吗？"]
+      - ["Hold on a second.", "稍等一下。"]
+      - ["It's an old idea.", "这是个老主意了。"]
+      - ["Turn it off.", "把它关掉。"]
+  - title: 弱读：功能词轻轻带过
+    sentences:
+      - ["I want to go for a walk.", "我想去散散步。"]
+      - ["What do you think of it?", "你觉得怎么样？"]
+      - ["She can speak English and French.", "她会说英语和法语。"]
+      - ["I was going to call you.", "我正打算给你打电话。"]
+      - ["Give them a minute.", "给他们一点时间。"]
+      - ["It's a lot of fun.", "这非常有趣。"]
+  - title: 闪音：元音之间的 t
+    sentences:
+      - ["Can I get a bottle of water?", "能给我一瓶水吗？"]
+      - ["It's a little better today.", "今天好一点了。"]
+      - ["Put it on the table.", "把它放在桌子上。"]
+      - ["I forgot about it.", "我把这事忘了。"]
+      - ["What a beautiful city!", "多美的城市啊！"]
+      - ["Let it go.", "随它去吧。"]
+  - title: 省略：辅音之间的 t 和 d
+    sentences:
+      - ["I don't know.", "我不知道。"]
+      - ["Just give me a minute.", "给我一分钟。"]
+      - ["She left the next day.", "她第二天就走了。"]
+      - ["I must be going.", "我得走了。"]
+      - ["That's the best part.", "那是最精彩的部分。"]
+      - ["It's the first time.", "这是第一次。"]
+  - title: 综合练习
+    sentences:
+      - ["What are you up to this weekend?", "这周末你打算做什么？"]
+      - ["I'll get back to you as soon as I can.", "我会尽快回复你。"]
+      - ["Did you get a chance to look at it?", "你有机会看一下吗？"]
+      - ["Let me think about it for a bit.", "让我想一会儿。"]
+      - ["It's not as hard as it looks.", "没有看起来那么难。"]
+      - ["Thanks a lot for all of your help.", "非常感谢你的帮助。"]

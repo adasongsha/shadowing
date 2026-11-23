@@ -27,7 +27,8 @@ function swPrecache(): Plugin {
         }
       };
       walk(outDir);
-      const list = files.filter((f) => f !== 'sw.js');
+      // content/ 下的内置内容体积较大，改为运行时按需缓存（见 public/sw.js）
+      const list = files.filter((f) => f !== 'sw.js' && !f.startsWith('content/'));
       const hash = createHash('sha256');
       for (const f of list.sort()) hash.update(f).update(readFileSync(join(outDir, f)));
       const version = hash.digest('hex').slice(0, 12);

@@ -1,11 +1,20 @@
 // 入口 + hash 路由。
-//   #/                         课程库
+//   #/                         首页（音标 / 句子 / 段落）
+//   #/ipa, #/ipa/<id>          音标总览 / 单个音标
+//   #/sentences                句子课程库（内置样例课 + 导入的课程包）
+//   #/paragraphs               段落（筹备中）
+//   #/dict                     查词
+//   #/credits                  素材来源
 //   #/c/<courseId>             Day 列表
 //   #/c/<courseId>/d/<day>     句子列表
 //   #/c/<courseId>/d/<day>/<i> 练习页（第 i 句，从 0 开始）
 //   #/settings                 设置
 import './style.css';
 import { player } from './audio';
+import { homeView } from './views/home';
+import { ipaView } from './views/ipa';
+import { phonemeView } from './views/phoneme';
+import { creditsView, dictView, paragraphsView } from './views/misc';
 import { libraryView } from './views/library';
 import { courseView } from './views/course';
 import { dayView } from './views/day';
@@ -16,7 +25,13 @@ export type Cleanup = (() => void) | void;
 export type View = (root: HTMLElement, params: string[]) => Promise<Cleanup> | Cleanup;
 
 const routes: [RegExp, View][] = [
-  [/^\/?$/, libraryView],
+  [/^\/?$/, homeView],
+  [/^\/ipa$/, ipaView],
+  [/^\/ipa\/([a-z]+)$/, phonemeView],
+  [/^\/sentences$/, libraryView],
+  [/^\/paragraphs$/, paragraphsView],
+  [/^\/dict$/, dictView],
+  [/^\/credits$/, creditsView],
   [/^\/settings$/, settingsView],
   [/^\/c\/([^/]+)$/, courseView],
   [/^\/c\/([^/]+)\/d\/(\d+)$/, dayView],

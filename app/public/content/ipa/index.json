@@ -1,0 +1,1654 @@
+{
+ "phonemes": [
+  {
+   "id": "ee",
+   "ipa": "i",
+   "group": "vowel",
+   "img": [
+    "img/i.svg"
+   ],
+   "approx": false,
+   "tip": "嘴角向两边拉开，像微笑；舌头前部抬高，靠近上颚。比中文的“衣”更紧、更长。",
+   "words": [
+    {
+     "w": "see",
+     "hl": "ee",
+     "ipa": "si",
+     "audio": "audio/see.m4a"
+    },
+    {
+     "w": "eat",
+     "hl": "ea",
+     "ipa": "it",
+     "audio": "audio/eat.m4a"
+    },
+    {
+     "w": "key",
+     "hl": "ey",
+     "ipa": "ki",
+     "audio": "audio/key.m4a"
+    },
+    {
+     "w": "machine",
+     "hl": "i",
+     "ipa": "məˈʃin",
+     "audio": "audio/machine.m4a"
+    }
+   ],
+   "pairs": [
+    "ih"
+   ]
+  },
+  {
+   "id": "ih",
+   "ipa": "ɪ",
+   "group": "vowel",
+   "img": [
+    "img/ih.svg"
+   ],
+   "approx": false,
+   "tip": "比 /i/ 放松，嘴巴稍微张开一点，舌头略低。短促，不要读成“衣”。",
+   "words": [
+    {
+     "w": "sit",
+     "hl": "i",
+     "ipa": "sɪt",
+     "audio": "audio/sit.m4a"
+    },
+    {
+     "w": "big",
+     "hl": "i",
+     "ipa": "bɪg",
+     "audio": "audio/big.m4a"
+    },
+    {
+     "w": "gym",
+     "hl": "y",
+     "ipa": "dʒɪm",
+     "audio": "audio/gym.m4a"
+    },
+    {
+     "w": "busy",
+     "hl": "u",
+     "ipa": "ˈbɪzi",
+     "audio": "audio/busy.m4a"
+    }
+   ],
+   "pairs": [
+    "ee",
+    "eh"
+   ]
+  },
+  {
+   "id": "eh",
+   "ipa": "ɛ",
+   "group": "vowel",
+   "img": [
+    "img/eh.svg"
+   ],
+   "approx": false,
+   "tip": "嘴巴半开，舌头放在中间偏前的位置，类似中文“哎”的开头，但不要滑动。",
+   "words": [
+    {
+     "w": "bed",
+     "hl": "e",
+     "ipa": "bɛd",
+     "audio": "audio/bed.m4a"
+    },
+    {
+     "w": "head",
+     "hl": "ea",
+     "ipa": "hɛd",
+     "audio": "audio/head.m4a"
+    },
+    {
+     "w": "said",
+     "hl": "ai",
+     "ipa": "sɛd",
+     "audio": "audio/said.m4a"
+    },
+    {
+     "w": "friend",
+     "hl": "ie",
+     "ipa": "frɛnd",
+     "audio": "audio/friend.m4a"
+    }
+   ],
+   "pairs": [
+    "ae",
+    "ih"
+   ]
+  },
+  {
+   "id": "ae",
+   "ipa": "æ",
+   "group": "vowel",
+   "img": [
+    "img/ae.svg"
+   ],
+   "approx": false,
+   "tip": "美音的标志音之一。嘴巴张大，嘴角向两边拉，舌头压低、舌尖抵下齿。介于“哎”和“啊”之间，略带一点鼻音感。",
+   "words": [
+    {
+     "w": "cat",
+     "hl": "a",
+     "ipa": "kæt",
+     "audio": "audio/cat.m4a"
+    },
+    {
+     "w": "bad",
+     "hl": "a",
+     "ipa": "bæd",
+     "audio": "audio/bad.m4a"
+    },
+    {
+     "w": "laugh",
+     "hl": "au",
+     "ipa": "læf",
+     "audio": "audio/laugh.m4a"
+    },
+    {
+     "w": "happy",
+     "hl": "a",
+     "ipa": "ˈhæpi",
+     "audio": "audio/happy.m4a"
+    }
+   ],
+   "pairs": [
+    "eh",
+    "ah"
+   ]
+  },
+  {
+   "id": "ah",
+   "ipa": "ɑ",
+   "group": "vowel",
+   "img": [
+    "img/a.svg"
+   ],
+   "approx": true,
+   "tip": "嘴巴张大，下巴放松下沉，舌头放低靠后，像医生让你说“啊”。美音里 hot、stop 的 o 也读这个音。",
+   "words": [
+    {
+     "w": "father",
+     "hl": "a",
+     "ipa": "ˈfɑðɚ",
+     "audio": "audio/father.m4a"
+    },
+    {
+     "w": "hot",
+     "hl": "o",
+     "ipa": "hɑt",
+     "audio": "audio/hot.m4a"
+    },
+    {
+     "w": "stop",
+     "hl": "o",
+     "ipa": "stɑp",
+     "audio": "audio/stop.m4a"
+    },
+    {
+     "w": "car",
+     "hl": "a",
+     "ipa": "kɑr",
+     "audio": "audio/car.m4a"
+    }
+   ],
+   "pairs": [
+    "uh",
+    "aw",
+    "ae"
+   ]
+  },
+  {
+   "id": "aw",
+   "ipa": "ɔ",
+   "group": "vowel",
+   "img": [],
+   "approx": false,
+   "tip": "嘴唇稍微拢圆，舌头靠后，比 /ɑ/ 嘴巴小一点。很多美国人会把它和 /ɑ/ 读得很接近。",
+   "words": [
+    {
+     "w": "thought",
+     "hl": "ough",
+     "ipa": "θɔt",
+     "audio": "audio/thought.m4a"
+    },
+    {
+     "w": "law",
+     "hl": "aw",
+     "ipa": "lɔ",
+     "audio": "audio/law.m4a"
+    },
+    {
+     "w": "talk",
+     "hl": "a",
+     "ipa": "tɔk",
+     "audio": "audio/talk.m4a"
+    },
+    {
+     "w": "dog",
+     "hl": "o",
+     "ipa": "dɔg",
+     "audio": "audio/dog.m4a"
+    }
+   ],
+   "pairs": [
+    "ah",
+    "oh"
+   ]
+  },
+  {
+   "id": "uh",
+   "ipa": "ʌ",
+   "group": "vowel",
+   "img": [
+    "img/schwa.svg"
+   ],
+   "approx": true,
+   "tip": "嘴巴自然半开，舌头放在中间，短而有力，像中文“啊”的短促版。出现在重读音节。",
+   "words": [
+    {
+     "w": "cup",
+     "hl": "u",
+     "ipa": "kʌp",
+     "audio": "audio/cup.m4a"
+    },
+    {
+     "w": "love",
+     "hl": "o",
+     "ipa": "lʌv",
+     "audio": "audio/love.m4a"
+    },
+    {
+     "w": "money",
+     "hl": "o",
+     "ipa": "ˈmʌni",
+     "audio": "audio/money.m4a"
+    },
+    {
+     "w": "blood",
+     "hl": "oo",
+     "ipa": "blʌd",
+     "audio": "audio/blood.m4a"
+    }
+   ],
+   "pairs": [
+    "ah",
+    "schwa"
+   ]
+  },
+  {
+   "id": "schwa",
+   "ipa": "ə",
+   "group": "vowel",
+   "img": [
+    "img/schwa.svg"
+   ],
+   "approx": false,
+   "tip": "英语里最常见的音，只出现在弱读音节。全身放松，嘴巴微张，轻轻带过，像含糊的“呃”。弱读的关键就是它。",
+   "words": [
+    {
+     "w": "about",
+     "hl": "a",
+     "ipa": "əˈbaʊt",
+     "audio": "audio/about.m4a"
+    },
+    {
+     "w": "banana",
+     "hl": "a",
+     "ipa": "bəˈnænə",
+     "audio": "audio/banana.m4a"
+    },
+    {
+     "w": "problem",
+     "hl": "e",
+     "ipa": "ˈprɑbləm",
+     "audio": "audio/problem.m4a"
+    },
+    {
+     "w": "today",
+     "hl": "o",
+     "ipa": "təˈdeɪ",
+     "audio": "audio/today.m4a"
+    }
+   ],
+   "pairs": [
+    "uh"
+   ]
+  },
+  {
+   "id": "uu",
+   "ipa": "ʊ",
+   "group": "vowel",
+   "img": [
+    "img/uu.svg"
+   ],
+   "approx": false,
+   "tip": "嘴唇微微拢圆但不用力，舌头后部抬起，短促放松。不要读成长长的“乌”。",
+   "words": [
+    {
+     "w": "book",
+     "hl": "oo",
+     "ipa": "bʊk",
+     "audio": "audio/book.m4a"
+    },
+    {
+     "w": "good",
+     "hl": "oo",
+     "ipa": "gʊd",
+     "audio": "audio/good.m4a"
+    },
+    {
+     "w": "put",
+     "hl": "u",
+     "ipa": "pʊt",
+     "audio": "audio/put.m4a"
+    },
+    {
+     "w": "could",
+     "hl": "ou",
+     "ipa": "kʊd",
+     "audio": "audio/could.m4a"
+    }
+   ],
+   "pairs": [
+    "oo"
+   ]
+  },
+  {
+   "id": "oo",
+   "ipa": "u",
+   "group": "vowel",
+   "img": [
+    "img/u.svg"
+   ],
+   "approx": false,
+   "tip": "嘴唇收圆、向前突出，舌头后部抬高，比 /ʊ/ 紧而长，像中文“乌”。",
+   "words": [
+    {
+     "w": "food",
+     "hl": "oo",
+     "ipa": "fud",
+     "audio": "audio/food.m4a"
+    },
+    {
+     "w": "blue",
+     "hl": "ue",
+     "ipa": "blu",
+     "audio": "audio/blue.m4a"
+    },
+    {
+     "w": "two",
+     "hl": "wo",
+     "ipa": "tu",
+     "audio": "audio/two.m4a"
+    },
+    {
+     "w": "you",
+     "hl": "ou",
+     "ipa": "ju",
+     "audio": "audio/you.m4a"
+    }
+   ],
+   "pairs": [
+    "uu"
+   ]
+  },
+  {
+   "id": "er",
+   "ipa": "ɝ",
+   "group": "vowel",
+   "img": [
+    "img/r.svg"
+   ],
+   "approx": true,
+   "tip": "美音的卷舌元音（重读）。舌尖微微向上翘或舌身向后缩，嘴唇略圆。整个音都带着 r 的色彩。",
+   "words": [
+    {
+     "w": "bird",
+     "hl": "ir",
+     "ipa": "bɝd",
+     "audio": "audio/bird.m4a"
+    },
+    {
+     "w": "word",
+     "hl": "or",
+     "ipa": "wɝd",
+     "audio": "audio/word.m4a"
+    },
+    {
+     "w": "learn",
+     "hl": "ear",
+     "ipa": "lɝn",
+     "audio": "audio/learn.m4a"
+    },
+    {
+     "w": "her",
+     "hl": "er",
+     "ipa": "hɝ",
+     "audio": "audio/her.m4a"
+    }
+   ],
+   "pairs": [
+    "err"
+   ]
+  },
+  {
+   "id": "err",
+   "ipa": "ɚ",
+   "group": "vowel",
+   "img": [
+    "img/schwa.svg",
+    "img/r.svg"
+   ],
+   "approx": true,
+   "tip": "/ɝ/ 的弱读版本，出现在不重读音节，轻而短，但仍然带卷舌。",
+   "words": [
+    {
+     "w": "teacher",
+     "hl": "er",
+     "ipa": "ˈtitʃɚ",
+     "audio": "audio/teacher.m4a"
+    },
+    {
+     "w": "doctor",
+     "hl": "or",
+     "ipa": "ˈdɑktɚ",
+     "audio": "audio/doctor.m4a"
+    },
+    {
+     "w": "water",
+     "hl": "er",
+     "ipa": "ˈwɔtɚ",
+     "audio": "audio/water.m4a"
+    },
+    {
+     "w": "better",
+     "hl": "er",
+     "ipa": "ˈbɛtɚ",
+     "audio": "audio/better.m4a"
+    }
+   ],
+   "pairs": [
+    "er",
+    "schwa"
+   ]
+  },
+  {
+   "id": "ay",
+   "ipa": "eɪ",
+   "group": "diphthong",
+   "img": [
+    "img/eh.svg",
+    "img/ih.svg"
+   ],
+   "approx": false,
+   "tip": "从 /e/ 滑向 /ɪ/，像中文“诶”。前半部分饱满，后半部分轻轻收尾。",
+   "words": [
+    {
+     "w": "day",
+     "hl": "ay",
+     "ipa": "deɪ",
+     "audio": "audio/day.m4a"
+    },
+    {
+     "w": "name",
+     "hl": "a",
+     "ipa": "neɪm",
+     "audio": "audio/name.m4a"
+    },
+    {
+     "w": "great",
+     "hl": "ea",
+     "ipa": "greɪt",
+     "audio": "audio/great.m4a"
+    },
+    {
+     "w": "eight",
+     "hl": "eigh",
+     "ipa": "eɪt",
+     "audio": "audio/eight.m4a"
+    }
+   ],
+   "pairs": [
+    "eh"
+   ]
+  },
+  {
+   "id": "oh",
+   "ipa": "oʊ",
+   "group": "diphthong",
+   "img": [
+    "img/uu.svg"
+   ],
+   "approx": true,
+   "tip": "从 /o/ 滑向 /ʊ/，嘴唇由圆到更圆、更小，像中文“欧”。不要读成单一的“哦”。",
+   "words": [
+    {
+     "w": "go",
+     "hl": "o",
+     "ipa": "goʊ",
+     "audio": "audio/go.m4a"
+    },
+    {
+     "w": "home",
+     "hl": "o",
+     "ipa": "hoʊm",
+     "audio": "audio/home.m4a"
+    },
+    {
+     "w": "boat",
+     "hl": "oa",
+     "ipa": "boʊt",
+     "audio": "audio/boat.m4a"
+    },
+    {
+     "w": "know",
+     "hl": "ow",
+     "ipa": "noʊ",
+     "audio": "audio/know.m4a"
+    }
+   ],
+   "pairs": [
+    "aw"
+   ]
+  },
+  {
+   "id": "eye",
+   "ipa": "aɪ",
+   "group": "diphthong",
+   "img": [
+    "img/a.svg",
+    "img/ih.svg"
+   ],
+   "approx": false,
+   "tip": "从张大嘴的 /a/ 滑向 /ɪ/，像中文“爱”。开头要张够。",
+   "words": [
+    {
+     "w": "my",
+     "hl": "y",
+     "ipa": "maɪ",
+     "audio": "audio/my.m4a"
+    },
+    {
+     "w": "time",
+     "hl": "i",
+     "ipa": "taɪm",
+     "audio": "audio/time.m4a"
+    },
+    {
+     "w": "night",
+     "hl": "igh",
+     "ipa": "naɪt",
+     "audio": "audio/night.m4a"
+    },
+    {
+     "w": "buy",
+     "hl": "uy",
+     "ipa": "baɪ",
+     "audio": "audio/buy.m4a"
+    }
+   ],
+   "pairs": [
+    "oy"
+   ]
+  },
+  {
+   "id": "ow",
+   "ipa": "aʊ",
+   "group": "diphthong",
+   "img": [
+    "img/a.svg",
+    "img/uu.svg"
+   ],
+   "approx": false,
+   "tip": "从 /a/ 滑向 /ʊ/，嘴巴由大到小、嘴唇收圆，像中文“奥”。",
+   "words": [
+    {
+     "w": "now",
+     "hl": "ow",
+     "ipa": "naʊ",
+     "audio": "audio/now.m4a"
+    },
+    {
+     "w": "house",
+     "hl": "ou",
+     "ipa": "haʊs",
+     "audio": "audio/house.m4a"
+    },
+    {
+     "w": "out",
+     "hl": "ou",
+     "ipa": "aʊt",
+     "audio": "audio/out.m4a"
+    },
+    {
+     "w": "down",
+     "hl": "ow",
+     "ipa": "daʊn",
+     "audio": "audio/down.m4a"
+    }
+   ],
+   "pairs": [
+    "oh"
+   ]
+  },
+  {
+   "id": "oy",
+   "ipa": "ɔɪ",
+   "group": "diphthong",
+   "img": [
+    "img/ih.svg"
+   ],
+   "approx": true,
+   "tip": "从圆唇的 /ɔ/ 滑向 /ɪ/，像中文“哦一”连起来快读。",
+   "words": [
+    {
+     "w": "boy",
+     "hl": "oy",
+     "ipa": "bɔɪ",
+     "audio": "audio/boy.m4a"
+    },
+    {
+     "w": "coin",
+     "hl": "oi",
+     "ipa": "kɔɪn",
+     "audio": "audio/coin.m4a"
+    },
+    {
+     "w": "noise",
+     "hl": "oi",
+     "ipa": "nɔɪz",
+     "audio": "audio/noise.m4a"
+    },
+    {
+     "w": "enjoy",
+     "hl": "oy",
+     "ipa": "ˌɛnˈdʒɔɪ",
+     "audio": "audio/enjoy.m4a"
+    }
+   ],
+   "pairs": [
+    "eye"
+   ]
+  },
+  {
+   "id": "p",
+   "ipa": "p",
+   "group": "consonant",
+   "img": [
+    "img/p.svg"
+   ],
+   "approx": false,
+   "tip": "双唇紧闭再突然打开，送出一股气（清音，声带不振动）。词首要送气明显。",
+   "words": [
+    {
+     "w": "pen",
+     "hl": "p",
+     "ipa": "pɛn",
+     "audio": "audio/pen.m4a"
+    },
+    {
+     "w": "happy",
+     "hl": "pp",
+     "ipa": "ˈhæpi",
+     "audio": "audio/happy.m4a"
+    },
+    {
+     "w": "stop",
+     "hl": "p",
+     "ipa": "stɑp",
+     "audio": "audio/stop.m4a"
+    }
+   ],
+   "pairs": [
+    "b"
+   ]
+  },
+  {
+   "id": "b",
+   "ipa": "b",
+   "group": "consonant",
+   "img": [
+    "img/b.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /p/，但声带振动（浊音），气流弱。",
+   "words": [
+    {
+     "w": "bed",
+     "hl": "b",
+     "ipa": "bɛd",
+     "audio": "audio/bed.m4a"
+    },
+    {
+     "w": "rabbit",
+     "hl": "bb",
+     "ipa": "ˈræbət",
+     "audio": "audio/rabbit.m4a"
+    },
+    {
+     "w": "job",
+     "hl": "b",
+     "ipa": "dʒɑb",
+     "audio": "audio/job.m4a"
+    }
+   ],
+   "pairs": [
+    "p"
+   ]
+  },
+  {
+   "id": "t",
+   "ipa": "t",
+   "group": "consonant",
+   "img": [
+    "img/t.svg"
+   ],
+   "approx": false,
+   "tip": "舌尖抵住上齿龈（上门牙后面的小凸起），再突然放开送气。美音里两个元音之间的 t 常变成快速的闪音，听起来像轻 d（water）。",
+   "words": [
+    {
+     "w": "ten",
+     "hl": "t",
+     "ipa": "tɛn",
+     "audio": "audio/ten.m4a"
+    },
+    {
+     "w": "stop",
+     "hl": "t",
+     "ipa": "stɑp",
+     "audio": "audio/stop.m4a"
+    },
+    {
+     "w": "water",
+     "hl": "t",
+     "ipa": "ˈwɔtɚ",
+     "audio": "audio/water.m4a"
+    }
+   ],
+   "pairs": [
+    "d"
+   ]
+  },
+  {
+   "id": "d",
+   "ipa": "d",
+   "group": "consonant",
+   "img": [
+    "img/d.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /t/，声带振动。",
+   "words": [
+    {
+     "w": "dog",
+     "hl": "d",
+     "ipa": "dɔg",
+     "audio": "audio/dog.m4a"
+    },
+    {
+     "w": "ladder",
+     "hl": "dd",
+     "ipa": "ˈlædɚ",
+     "audio": "audio/ladder.m4a"
+    },
+    {
+     "w": "good",
+     "hl": "d",
+     "ipa": "gʊd",
+     "audio": "audio/good.m4a"
+    }
+   ],
+   "pairs": [
+    "t"
+   ]
+  },
+  {
+   "id": "k",
+   "ipa": "k",
+   "group": "consonant",
+   "img": [
+    "img/k.svg"
+   ],
+   "approx": false,
+   "tip": "舌根抬起顶住软腭，再突然放开送气。",
+   "words": [
+    {
+     "w": "cat",
+     "hl": "c",
+     "ipa": "kæt",
+     "audio": "audio/cat.m4a"
+    },
+    {
+     "w": "kick",
+     "hl": "k",
+     "ipa": "kɪk",
+     "audio": "audio/kick.m4a"
+    },
+    {
+     "w": "back",
+     "hl": "ck",
+     "ipa": "bæk",
+     "audio": "audio/back.m4a"
+    }
+   ],
+   "pairs": [
+    "g"
+   ]
+  },
+  {
+   "id": "g",
+   "ipa": "g",
+   "group": "consonant",
+   "img": [
+    "img/g.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /k/，声带振动。",
+   "words": [
+    {
+     "w": "go",
+     "hl": "g",
+     "ipa": "goʊ",
+     "audio": "audio/go.m4a"
+    },
+    {
+     "w": "bigger",
+     "hl": "gg",
+     "ipa": "ˈbɪgɚ",
+     "audio": "audio/bigger.m4a"
+    },
+    {
+     "w": "dog",
+     "hl": "g",
+     "ipa": "dɔg",
+     "audio": "audio/dog.m4a"
+    }
+   ],
+   "pairs": [
+    "k"
+   ]
+  },
+  {
+   "id": "f",
+   "ipa": "f",
+   "group": "consonant",
+   "img": [
+    "img/f.svg"
+   ],
+   "approx": false,
+   "tip": "上齿轻触下唇，气流从缝隙中摩擦而出（清音）。",
+   "words": [
+    {
+     "w": "fish",
+     "hl": "f",
+     "ipa": "fɪʃ",
+     "audio": "audio/fish.m4a"
+    },
+    {
+     "w": "coffee",
+     "hl": "ff",
+     "ipa": "ˈkɑfi",
+     "audio": "audio/coffee.m4a"
+    },
+    {
+     "w": "laugh",
+     "hl": "gh",
+     "ipa": "læf",
+     "audio": "audio/laugh.m4a"
+    }
+   ],
+   "pairs": [
+    "v"
+   ]
+  },
+  {
+   "id": "v",
+   "ipa": "v",
+   "group": "consonant",
+   "img": [
+    "img/v.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /f/，声带振动。中国学生常读成 /w/，注意上齿一定要碰到下唇。",
+   "words": [
+    {
+     "w": "very",
+     "hl": "v",
+     "ipa": "ˈvɛri",
+     "audio": "audio/very.m4a"
+    },
+    {
+     "w": "never",
+     "hl": "v",
+     "ipa": "ˈnɛvɚ",
+     "audio": "audio/never.m4a"
+    },
+    {
+     "w": "love",
+     "hl": "v",
+     "ipa": "lʌv",
+     "audio": "audio/love.m4a"
+    }
+   ],
+   "pairs": [
+    "f",
+    "w"
+   ]
+  },
+  {
+   "id": "th",
+   "ipa": "θ",
+   "group": "consonant",
+   "img": [
+    "img/th.svg"
+   ],
+   "approx": false,
+   "tip": "舌尖轻放在上下齿之间（或抵住上齿背），气流从舌齿间吹出（清音）。不要读成 /s/ 或 /f/。",
+   "words": [
+    {
+     "w": "think",
+     "hl": "th",
+     "ipa": "θɪŋk",
+     "audio": "audio/think.m4a"
+    },
+    {
+     "w": "nothing",
+     "hl": "th",
+     "ipa": "ˈnʌθɪŋ",
+     "audio": "audio/nothing.m4a"
+    },
+    {
+     "w": "month",
+     "hl": "th",
+     "ipa": "mʌnθ",
+     "audio": "audio/month.m4a"
+    }
+   ],
+   "pairs": [
+    "dh",
+    "s"
+   ]
+  },
+  {
+   "id": "dh",
+   "ipa": "ð",
+   "group": "consonant",
+   "img": [
+    "img/dh.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /θ/，声带振动。the、this、that 这些高频词都用它。",
+   "words": [
+    {
+     "w": "this",
+     "hl": "th",
+     "ipa": "ðɪs",
+     "audio": "audio/this.m4a"
+    },
+    {
+     "w": "mother",
+     "hl": "th",
+     "ipa": "ˈmʌðɚ",
+     "audio": "audio/mother.m4a"
+    },
+    {
+     "w": "breathe",
+     "hl": "th",
+     "ipa": "brið",
+     "audio": "audio/breathe.m4a"
+    }
+   ],
+   "pairs": [
+    "th",
+    "z"
+   ]
+  },
+  {
+   "id": "s",
+   "ipa": "s",
+   "group": "consonant",
+   "img": [
+    "img/s.svg"
+   ],
+   "approx": false,
+   "tip": "舌尖靠近上齿龈，留一条窄缝，气流快速摩擦而出（清音），像蛇的“嘶”。",
+   "words": [
+    {
+     "w": "see",
+     "hl": "s",
+     "ipa": "si",
+     "audio": "audio/see.m4a"
+    },
+    {
+     "w": "lesson",
+     "hl": "ss",
+     "ipa": "ˈlɛsən",
+     "audio": "audio/lesson.m4a"
+    },
+    {
+     "w": "nice",
+     "hl": "c",
+     "ipa": "naɪs",
+     "audio": "audio/nice.m4a"
+    }
+   ],
+   "pairs": [
+    "z",
+    "th",
+    "sh"
+   ]
+  },
+  {
+   "id": "z",
+   "ipa": "z",
+   "group": "consonant",
+   "img": [
+    "img/z.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /s/，声带振动，像蜜蜂的“嗡”。复数和第三人称的 s 常读 /z/。",
+   "words": [
+    {
+     "w": "zoo",
+     "hl": "z",
+     "ipa": "zu",
+     "audio": "audio/zoo.m4a"
+    },
+    {
+     "w": "easy",
+     "hl": "s",
+     "ipa": "ˈizi",
+     "audio": "audio/easy.m4a"
+    },
+    {
+     "w": "dogs",
+     "hl": "s",
+     "ipa": "dɑgz",
+     "audio": "audio/dogs.m4a"
+    }
+   ],
+   "pairs": [
+    "s"
+   ]
+  },
+  {
+   "id": "sh",
+   "ipa": "ʃ",
+   "group": "consonant",
+   "img": [
+    "img/sh.svg"
+   ],
+   "approx": false,
+   "tip": "嘴唇向前突出略圆，舌身抬向硬腭，气流摩擦而出（清音），比中文“师”更圆唇。",
+   "words": [
+    {
+     "w": "she",
+     "hl": "sh",
+     "ipa": "ʃi",
+     "audio": "audio/she.m4a"
+    },
+    {
+     "w": "nation",
+     "hl": "ti",
+     "ipa": "ˈneɪʃən",
+     "audio": "audio/nation.m4a"
+    },
+    {
+     "w": "wash",
+     "hl": "sh",
+     "ipa": "wɑʃ",
+     "audio": "audio/wash.m4a"
+    }
+   ],
+   "pairs": [
+    "s",
+    "zh"
+   ]
+  },
+  {
+   "id": "zh",
+   "ipa": "ʒ",
+   "group": "consonant",
+   "img": [
+    "img/zh.svg"
+   ],
+   "approx": false,
+   "tip": "口型同 /ʃ/，声带振动。不常见，多出现在 -sure、-sion 里。",
+   "words": [
+    {
+     "w": "measure",
+     "hl": "s",
+     "ipa": "ˈmɛʒɚ",
+     "audio": "audio/measure.m4a"
+    },
+    {
+     "w": "vision",
+     "hl": "s",
+     "ipa": "ˈvɪʒən",
+     "audio": "audio/vision.m4a"
+    },
+    {
+     "w": "usual",
+     "hl": "s",
+     "ipa": "ˈjuʒəwəl",
+     "audio": "audio/usual.m4a"
+    }
+   ],
+   "pairs": [
+    "sh"
+   ]
+  },
+  {
+   "id": "h",
+   "ipa": "h",
+   "group": "consonant",
+   "img": [],
+   "approx": false,
+   "tip": "嘴巴保持后面元音的口型，从喉咙轻轻呼出气，像哈气。比中文“喝”的摩擦轻得多。",
+   "words": [
+    {
+     "w": "hat",
+     "hl": "h",
+     "ipa": "hæt",
+     "audio": "audio/hat.m4a"
+    },
+    {
+     "w": "behind",
+     "hl": "h",
+     "ipa": "bɪˈhaɪnd",
+     "audio": "audio/behind.m4a"
+    },
+    {
+     "w": "who",
+     "hl": "wh",
+     "ipa": "hu",
+     "audio": "audio/who.m4a"
+    }
+   ],
+   "pairs": []
+  },
+  {
+   "id": "ch",
+   "ipa": "tʃ",
+   "group": "consonant",
+   "img": [
+    "img/t.svg",
+    "img/sh.svg"
+   ],
+   "approx": false,
+   "tip": "先像 /t/ 一样舌尖抵住上齿龈，再滑到 /ʃ/ 放出气流（清音），嘴唇略突出。",
+   "words": [
+    {
+     "w": "chair",
+     "hl": "ch",
+     "ipa": "tʃɛr",
+     "audio": "audio/chair.m4a"
+    },
+    {
+     "w": "teacher",
+     "hl": "ch",
+     "ipa": "ˈtitʃɚ",
+     "audio": "audio/teacher.m4a"
+    },
+    {
+     "w": "watch",
+     "hl": "tch",
+     "ipa": "wɑtʃ",
+     "audio": "audio/watch.m4a"
+    }
+   ],
+   "pairs": [
+    "j",
+    "sh"
+   ]
+  },
+  {
+   "id": "j",
+   "ipa": "dʒ",
+   "group": "consonant",
+   "img": [
+    "img/d.svg",
+    "img/zh.svg"
+   ],
+   "approx": false,
+   "tip": "/tʃ/ 的浊音版：从 /d/ 滑到 /ʒ/，声带振动。",
+   "words": [
+    {
+     "w": "job",
+     "hl": "j",
+     "ipa": "dʒɑb",
+     "audio": "audio/job.m4a"
+    },
+    {
+     "w": "magic",
+     "hl": "g",
+     "ipa": "ˈmædʒɪk",
+     "audio": "audio/magic.m4a"
+    },
+    {
+     "w": "bridge",
+     "hl": "dge",
+     "ipa": "brɪdʒ",
+     "audio": "audio/bridge.m4a"
+    }
+   ],
+   "pairs": [
+    "ch"
+   ]
+  },
+  {
+   "id": "m",
+   "ipa": "m",
+   "group": "consonant",
+   "img": [
+    "img/m.svg"
+   ],
+   "approx": false,
+   "tip": "双唇闭合，气流从鼻腔出，声带振动。词尾的 m 要闭嘴收住。",
+   "words": [
+    {
+     "w": "man",
+     "hl": "m",
+     "ipa": "mæn",
+     "audio": "audio/man.m4a"
+    },
+    {
+     "w": "summer",
+     "hl": "mm",
+     "ipa": "ˈsʌmɚ",
+     "audio": "audio/summer.m4a"
+    },
+    {
+     "w": "time",
+     "hl": "m",
+     "ipa": "taɪm",
+     "audio": "audio/time.m4a"
+    }
+   ],
+   "pairs": [
+    "n"
+   ]
+  },
+  {
+   "id": "n",
+   "ipa": "n",
+   "group": "consonant",
+   "img": [
+    "img/n.svg"
+   ],
+   "approx": false,
+   "tip": "舌尖抵住上齿龈，气流从鼻腔出。词尾的 n 舌尖要顶住，不要读成 /ŋ/。",
+   "words": [
+    {
+     "w": "no",
+     "hl": "n",
+     "ipa": "noʊ",
+     "audio": "audio/no.m4a"
+    },
+    {
+     "w": "dinner",
+     "hl": "nn",
+     "ipa": "ˈdɪnɚ",
+     "audio": "audio/dinner.m4a"
+    },
+    {
+     "w": "sun",
+     "hl": "n",
+     "ipa": "sʌn",
+     "audio": "audio/sun.m4a"
+    }
+   ],
+   "pairs": [
+    "ng",
+    "l"
+   ]
+  },
+  {
+   "id": "ng",
+   "ipa": "ŋ",
+   "group": "consonant",
+   "img": [
+    "img/ng.svg"
+   ],
+   "approx": false,
+   "tip": "舌根抬起顶住软腭，气流从鼻腔出，像中文“昂”的尾音。-ing 结尾的 g 通常不单独发出来。",
+   "words": [
+    {
+     "w": "sing",
+     "hl": "ng",
+     "ipa": "sɪŋ",
+     "audio": "audio/sing.m4a"
+    },
+    {
+     "w": "thinking",
+     "hl": "ng",
+     "ipa": "ˈθɪŋkɪŋ",
+     "audio": "audio/thinking.m4a"
+    },
+    {
+     "w": "long",
+     "hl": "ng",
+     "ipa": "lɔŋ",
+     "audio": "audio/long.m4a"
+    }
+   ],
+   "pairs": [
+    "n"
+   ]
+  },
+  {
+   "id": "l",
+   "ipa": "l",
+   "group": "consonant",
+   "img": [],
+   "approx": false,
+   "tip": "舌尖抵住上齿龈，气流从舌头两侧流出。词尾的 l（暗 l）舌根还要向后抬，听起来像轻“喔”，不要省略。",
+   "words": [
+    {
+     "w": "light",
+     "hl": "l",
+     "ipa": "laɪt",
+     "audio": "audio/light.m4a"
+    },
+    {
+     "w": "hello",
+     "hl": "ll",
+     "ipa": "həˈloʊ",
+     "audio": "audio/hello.m4a"
+    },
+    {
+     "w": "feel",
+     "hl": "l",
+     "ipa": "fil",
+     "audio": "audio/feel.m4a"
+    }
+   ],
+   "pairs": [
+    "r",
+    "n"
+   ]
+  },
+  {
+   "id": "r",
+   "ipa": "r",
+   "group": "consonant",
+   "img": [
+    "img/r.svg"
+   ],
+   "approx": true,
+   "tip": "美音 r：舌尖向上卷起但不碰到任何地方（或舌身向后缩），嘴唇略圆。和中文“日”不同，不要有摩擦。",
+   "words": [
+    {
+     "w": "red",
+     "hl": "r",
+     "ipa": "rɛd",
+     "audio": "audio/red.m4a"
+    },
+    {
+     "w": "sorry",
+     "hl": "rr",
+     "ipa": "ˈsɑri",
+     "audio": "audio/sorry.m4a"
+    },
+    {
+     "w": "car",
+     "hl": "r",
+     "ipa": "kɑr",
+     "audio": "audio/car.m4a"
+    }
+   ],
+   "pairs": [
+    "l",
+    "w"
+   ]
+  },
+  {
+   "id": "w",
+   "ipa": "w",
+   "group": "consonant",
+   "img": [],
+   "approx": false,
+   "tip": "嘴唇收圆突出，像要说“乌”，然后迅速滑到后面的元音。",
+   "words": [
+    {
+     "w": "we",
+     "hl": "w",
+     "ipa": "wi",
+     "audio": "audio/we.m4a"
+    },
+    {
+     "w": "away",
+     "hl": "w",
+     "ipa": "əˈweɪ",
+     "audio": "audio/away.m4a"
+    },
+    {
+     "w": "one",
+     "hl": "o",
+     "ipa": "wʌn",
+     "audio": "audio/one.m4a"
+    }
+   ],
+   "pairs": [
+    "v",
+    "r"
+   ]
+  },
+  {
+   "id": "y",
+   "ipa": "j",
+   "group": "consonant",
+   "img": [],
+   "approx": false,
+   "tip": "舌头前部抬向硬腭，像说“衣”，然后迅速滑到后面的元音。",
+   "words": [
+    {
+     "w": "yes",
+     "hl": "y",
+     "ipa": "jɛs",
+     "audio": "audio/yes.m4a"
+    },
+    {
+     "w": "beyond",
+     "hl": "y",
+     "ipa": "bɪˈɑnd",
+     "audio": "audio/beyond.m4a"
+    },
+    {
+     "w": "use",
+     "hl": "u",
+     "ipa": "jus",
+     "audio": "audio/use.m4a"
+    }
+   ],
+   "pairs": []
+  }
+ ],
+ "credits": [
+  {
+   "file": "a.svg",
+   "title": "a.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/a.svg"
+  },
+  {
+   "file": "ae.svg",
+   "title": "æ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/æ.svg"
+  },
+  {
+   "file": "b.svg",
+   "title": "b.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/b.svg"
+  },
+  {
+   "file": "d.svg",
+   "title": "d.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/d.svg"
+  },
+  {
+   "file": "dh.svg",
+   "title": "eth.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/eth.svg"
+  },
+  {
+   "file": "eh.svg",
+   "title": "ɛ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/ɛ.svg"
+  },
+  {
+   "file": "f.svg",
+   "title": "f.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/f.svg"
+  },
+  {
+   "file": "g.svg",
+   "title": "g.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/g.svg"
+  },
+  {
+   "file": "i.svg",
+   "title": "i.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/i.svg"
+  },
+  {
+   "file": "ih.svg",
+   "title": "ɪ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/ɪ.svg"
+  },
+  {
+   "file": "k.svg",
+   "title": "k.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/k.svg"
+  },
+  {
+   "file": "m.svg",
+   "title": "m.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/m.svg"
+  },
+  {
+   "file": "n.svg",
+   "title": "n.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/n.svg"
+  },
+  {
+   "file": "ng.svg",
+   "title": "ŋ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/ŋ.svg"
+  },
+  {
+   "file": "p.svg",
+   "title": "p.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/p.svg"
+  },
+  {
+   "file": "r.svg",
+   "title": "r_retroflex.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/r_retroflex.svg"
+  },
+  {
+   "file": "s.svg",
+   "title": "s_laminal.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/s_laminal.svg"
+  },
+  {
+   "file": "schwa.svg",
+   "title": "neutral.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/neutral.svg"
+  },
+  {
+   "file": "sh.svg",
+   "title": "ʃ_laminal.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/ʃ_laminal.svg"
+  },
+  {
+   "file": "t.svg",
+   "title": "t.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/t.svg"
+  },
+  {
+   "file": "th.svg",
+   "title": "θ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/θ.svg"
+  },
+  {
+   "file": "u.svg",
+   "title": "u.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/u.svg"
+  },
+  {
+   "file": "uu.svg",
+   "title": "ʊ.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/vowels/svg/ʊ.svg"
+  },
+  {
+   "file": "v.svg",
+   "title": "v.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/v.svg"
+  },
+  {
+   "file": "z.svg",
+   "title": "z_laminal.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/z_laminal.svg"
+  },
+  {
+   "file": "zh.svg",
+   "title": "ʒ_apical.svg",
+   "license": "CC0 1.0",
+   "artist": "Richard Wright, Dan McCloy",
+   "page": "https://github.com/drammock/phonetics-teaching-assets/blob/main/midsaggital_articulations/consonants/svg/ʒ_apical.svg"
+  }
+ ]
+}

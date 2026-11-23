@@ -1,8 +1,9 @@
-// 首页 / 课程库：导入课程包、列出已导入课程、删除。
+// 句子课程库：内置样例课 + 导入的课程包，可删除。
+import { dismissBuiltin, ensureBuiltinCourse } from '../content';
 import { deleteCourse, listCourses, progressMap, type Course } from '../db';
 import { importPack } from '../importer';
 import { enc } from '../nav';
-import { h, iconEl, isStandalone, toast } from '../ui';
+import { h, iconEl, toast } from '../ui';
 
 export async function libraryView(root: HTMLElement) {
   const list = h('div', { class: 'list' });
@@ -26,7 +27,10 @@ export async function libraryView(root: HTMLElement) {
   });
 
   async function renderList() {
-    const courses = (await listCourses()).sort((a, b) => b.imported_at - a.imported_at);
+    // 内置课排在最前，其余按导入时间倒序
+    const courses = (await listCourses()).sort(
+      (a, b) => Number(!!b.builtin) - Number(!!a.builtin) || b.imported_at - a.imported_at,
+    );
     if (!courses.length) {
       list.replaceChildren(
         h(
@@ -34,6 +38,11 @@ export async function libraryView(root: HTMLElement) {
           { class: 'empty' },
           h('p', { class: 'empty-title' }, '还没有课程'),
           h('p', null, '点上面的「导入课程包」，从「文件」App 里选择 .zip 课程包。'),
+          h(
+            'button',
+            { class: 'btn', type: 'button', onclick: async () => (dismissBuiltin(false), await ensureBuiltinCourse(), renderList()) },
+            '恢复内置样例课',
+          ),
         ),
       );
       return;
@@ -56,6 +65,7 @@ export async function libraryView(root: HTMLElement) {
           e.stopPropagation();
           if (!confirm(`删除「${c.title}」？课程音频和你的录音都会从本机删除。`)) return;
           await deleteCourse(c.course_id);
+          if (c.builtin) dismissBuiltin(true);
           toast('已删除');
           renderList();
         },
@@ -68,7 +78,7 @@ export async function libraryView(root: HTMLElement) {
       h(
         'div',
         { class: 'row-main' },
-        h('div', { class: 'row-title' }, c.title),
+        h('div', { class: 'row-title' }, c.title, c.builtin && h('span', { class: 'tag' }, '内置')),
         h('div', { class: 'row-sub' }, `${c.days.length} 天 · ${total} 句 · 已练 ${practiced}`),
         progressBar(practiced, total),
       ),
@@ -80,20 +90,28 @@ export async function libraryView(root: HTMLElement) {
     h(
       'header',
       { class: 'topbar' },
-      h('h1', null, '跟读对比'),
-      h('a', { class: 'icon-btn', href: '#/settings', 'aria-label': '设置' }, iconEl('gear')),
+      h('a', { class: 'icon-btn', href: '#/', 'aria-label': '返回首页' }, iconEl('back')),
+      h('h1', null, '句子'),
+      h('span', { class: 'icon-btn-spacer' }),
     ),
     h(
       'main',
       { class: 'content' },
-      !isStandalone() &&
-        h('div', { class: 'hint' }, '建议在 Safari 里点「分享」→「添加到主屏幕」，从主屏幕打开使用：数据更不容易被系统清理，也能离线练习。'),
       h('label', { class: 'btn primary block' }, iconEl('plus'), '导入课程包', input),
       status,
       list,
     ),
   );
   await renderList();
+  // 第一次进来时自动装上内置样例课
+  try {
+    status.hidden = false;
+    if (await ensureBuiltinCourse((m) => (status.textContent = m))) await renderList();
+  } catch (e: any) {
+    toast(`样例课加载失败：${e?.message ?? e}`, 3500);
+  } finally {
+    status.hidden = true;
+  }
 }
 
 export function progressBar(done: number, total: number) {

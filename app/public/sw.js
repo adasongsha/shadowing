@@ -3,6 +3,8 @@
 const VERSION = '__VERSION__';
 const CACHE = `shell-${VERSION}`;
 const PRECACHE = self.__PRECACHE__;
+// 内置公开内容（词典分片、音标、样例课）：用到时才缓存，不随版本号清空
+const CONTENT_CACHE = 'content-v1';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
@@ -12,7 +14,7 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k !== CONTENT_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
@@ -23,6 +25,26 @@ self.addEventListener('fetch', (e) => {
   // 页面导航：网络优先（拿到新版本），断网时回退到缓存的外壳
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).catch(() => caches.match('./', { cacheName: CACHE, ignoreVary: true })));
+    return;
+  }
+  // 内置内容：先用缓存（离线可用），同时在后台更新，下次打开就是新内容
+  if (new URL(req.url).pathname.includes('/content/')) {
+    e.respondWith(
+      caches.open(CONTENT_CACHE).then(async (c) => {
+        const hit = await c.match(req, { ignoreVary: true });
+        const net = fetch(req)
+          .then((res) => {
+            if (res.ok) c.put(req, res.clone());
+            return res;
+          })
+          .catch(() => hit);
+        if (hit) {
+          e.waitUntil(net);
+          return hit;
+        }
+        return net;
+      }),
+    );
     return;
   }
   // 静态资源：缓存优先。ignoreVary：Vite 产物带 crossorigin，请求会多一个 Origin 头，

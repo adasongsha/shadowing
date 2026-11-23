@@ -48,7 +48,7 @@ export async function courseView(root: HTMLElement, [courseId]: string[]) {
     h(
       'header',
       { class: 'topbar' },
-      h('a', { class: 'icon-btn', href: '#/', 'aria-label': '返回' }, iconEl('back')),
+      h('a', { class: 'icon-btn', href: '#/sentences', 'aria-label': '返回' }, iconEl('back')),
       h('h1', null, course.title),
       h('span', { class: 'icon-btn-spacer' }),
     ),

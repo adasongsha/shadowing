@@ -11,6 +11,8 @@ import {
   type Mark,
   type Recording,
 } from '../db';
+import { renderSentence } from '../components/richtext';
+import { openWordCard } from '../components/wordcard';
 import { enc, go } from '../nav';
 import { settings, type TextMode } from '../settings';
 import { fmtAgo, h, icon, iconEl, toast } from '../ui';
@@ -49,11 +51,27 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
   const recLabel = bRec.querySelector('.lbl')!;
   const recIcon = bRec.querySelector('.ic')!;
 
-  const text = h('div', { class: 'sentence-text' }, h('p', { class: 'sentence' }, s.text), s.zh && h('p', { class: 'translation' }, s.zh));
-  const textWrap = h(
+  const hasHints = !!s.hints?.length;
+  const text = h(
     'div',
-    { class: 'sentence-wrap', onclick: () => st.textMode !== 'all' && text.classList.toggle('peek') },
-    text,
+    { class: 'sentence-text' },
+    h('p', { class: 'sentence', lang: 'en' }, renderSentence(s.text, s.hints, (t) => openWordCard(t.word, t.hints))),
+    s.zh && h('p', { class: 'translation' }, s.zh),
+  );
+  const textWrap = h('div', { class: 'sentence-wrap' }, text);
+  // 捕获阶段处理「偷看」：文本被隐藏时，第一下点击只是显示出来，不触发查词
+  textWrap.addEventListener(
+    'click',
+    (e) => {
+      const target = e.target as HTMLElement;
+      if (st.textMode === 'none' && !text.classList.contains('peek')) {
+        text.classList.add('peek');
+        e.stopPropagation();
+      } else if (st.textMode !== 'all' && !target.closest('.w')) {
+        text.classList.toggle('peek');
+      }
+    },
+    true,
   );
   const peekHint = h('p', { class: 'peek-hint' });
   textWrap.append(peekHint);
@@ -114,9 +132,27 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     },
   });
 
+  const hintBtn =
+    hasHints &&
+    h('button', {
+      class: 'icon-btn',
+      type: 'button',
+      'aria-label': '连读弱读提示',
+      'aria-pressed': String(st.showHints),
+      html: icon.hint,
+      onclick: (e: Event) => {
+        settings.set({ showHints: !settings.get().showHints });
+        st.showHints = settings.get().showHints;
+        (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(st.showHints));
+        toast(st.showHints ? '显示连读、弱读提示（点单词看说明）' : '已关闭发音提示', 1500);
+        applyModes();
+      },
+    });
+
   const toggles = h(
     'div',
     { class: 'topbar-actions' },
+    hintBtn,
     textModeBtn,
     h(
       'button',
@@ -192,12 +228,14 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     root.classList.toggle('focus', st.focusMode);
     root.classList.toggle('hide-text', st.textMode === 'none');
     root.classList.toggle('hide-zh', st.textMode === 'en' && !!s!.zh);
+    root.classList.toggle('show-hints', st.showHints && hasHints);
     text.classList.remove('peek');
     const m = MODES[st.textMode];
     textModeBtn.innerHTML = (st.textMode === 'none' ? icon.eyeOff : icon.eye) + (m.badge ? `<span class="mode-badge">${m.badge}</span>` : '');
     textModeBtn.setAttribute('aria-label', m.label);
     textModeBtn.setAttribute('aria-pressed', String(st.textMode !== 'all'));
-    peekHint.textContent = st.textMode === 'none' ? '文本已隐藏 · 点一下偷看' : '点一下偷看中文';
+    peekHint.textContent =
+      st.textMode === 'none' ? '文本已隐藏 · 点一下偷看' : st.textMode === 'en' ? '点中文区域偷看翻译' : '点单词可以查词';
   }
 
   function updateButtons() {

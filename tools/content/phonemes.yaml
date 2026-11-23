@@ -1,0 +1,57 @@
+# 美音 41 个音素（单元音 12 + 双元音 5 + 辅音 24）
+# 字段：
+#   id      URL 里用的英文名（只用字母）
+#   ipa     音标
+#   group   vowel 单元音 / diphthong 双元音 / consonant 辅音
+#   img     舌位剖面图（data/commons/svg 里的文件名，多个表示动作从前一个滑到后一个）
+#   approx  true = 剖面图只是近似（没有完全对应的图）
+#   tip     发音要领（先写基础描述，之后换成你的心得）
+#   words   例词：[单词, 该音所在字母（可选，用于高亮）]
+#   pairs   易混音（填 id）
+# 这份文件是内容的“源头”，改完运行 build_ipa.py 重新生成。
+
+phonemes:
+  # ---------- 单元音 ----------
+  - {id: ee, ipa: i, group: vowel, img: [i], tip: "嘴角向两边拉开，像微笑；舌头前部抬高，靠近上颚。比中文的“衣”更紧、更长。", words: [[see, ee], [eat, ea], [key, ey], [machine, i]], pairs: [ih]}
+  - {id: ih, ipa: ɪ, group: vowel, img: [ɪ], tip: "比 /i/ 放松，嘴巴稍微张开一点，舌头略低。短促，不要读成“衣”。", words: [[sit, i], [big, i], [gym, y], [busy, u]], pairs: [ee, eh]}
+  - {id: eh, ipa: ɛ, group: vowel, img: [ɛ], tip: "嘴巴半开，舌头放在中间偏前的位置，类似中文“哎”的开头，但不要滑动。", words: [[bed, e], [head, ea], [said, ai], [friend, ie]], pairs: [ae, ih]}
+  - {id: ae, ipa: æ, group: vowel, img: [æ], tip: "美音的标志音之一。嘴巴张大，嘴角向两边拉，舌头压低、舌尖抵下齿。介于“哎”和“啊”之间，略带一点鼻音感。", words: [[cat, a], [bad, a], [laugh, au], [happy, a]], pairs: [eh, ah]}
+  - {id: ah, ipa: ɑ, group: vowel, img: [a], approx: true, tip: "嘴巴张大，下巴放松下沉，舌头放低靠后，像医生让你说“啊”。美音里 hot、stop 的 o 也读这个音。", words: [[father, a], [hot, o], [stop, o], [car, a]], pairs: [uh, aw, ae]}
+  - {id: aw, ipa: ɔ, group: vowel, img: [], tip: "嘴唇稍微拢圆，舌头靠后，比 /ɑ/ 嘴巴小一点。很多美国人会把它和 /ɑ/ 读得很接近。", words: [[thought, ough], [law, aw], [talk, a], [dog, o]], pairs: [ah, oh]}
+  - {id: uh, ipa: ʌ, group: vowel, img: [ə], approx: true, tip: "嘴巴自然半开，舌头放在中间，短而有力，像中文“啊”的短促版。出现在重读音节。", words: [[cup, u], [love, o], [money, o], [blood, oo]], pairs: [ah, schwa]}
+  - {id: schwa, ipa: ə, group: vowel, img: [ə], tip: "英语里最常见的音，只出现在弱读音节。全身放松，嘴巴微张，轻轻带过，像含糊的“呃”。弱读的关键就是它。", words: [[about, a], [banana, a], [problem, e], [today, o]], pairs: [uh]}
+  - {id: uu, ipa: ʊ, group: vowel, img: [ʊ], tip: "嘴唇微微拢圆但不用力，舌头后部抬起，短促放松。不要读成长长的“乌”。", words: [[book, oo], [good, oo], [put, u], [could, ou]], pairs: [oo]}
+  - {id: oo, ipa: u, group: vowel, img: [u], tip: "嘴唇收圆、向前突出，舌头后部抬高，比 /ʊ/ 紧而长，像中文“乌”。", words: [[food, oo], [blue, ue], [two, wo], [you, ou]], pairs: [uu]}
+  - {id: er, ipa: ɝ, group: vowel, img: [r], approx: true, tip: "美音的卷舌元音（重读）。舌尖微微向上翘或舌身向后缩，嘴唇略圆。整个音都带着 r 的色彩。", words: [[bird, ir], [word, or], [learn, ear], [her, er]], pairs: [err]}
+  - {id: err, ipa: ɚ, group: vowel, img: [ə, r], approx: true, tip: "/ɝ/ 的弱读版本，出现在不重读音节，轻而短，但仍然带卷舌。", words: [[teacher, er], [doctor, or], [water, er], [better, er]], pairs: [er, schwa]}
+  - {id: ay, ipa: eɪ, group: diphthong, img: [ɛ, ɪ], tip: "从 /e/ 滑向 /ɪ/，像中文“诶”。前半部分饱满，后半部分轻轻收尾。", words: [[day, ay], [name, a], [great, ea], [eight, eigh]], pairs: [eh]}
+  - {id: oh, ipa: oʊ, group: diphthong, img: [ʊ], approx: true, tip: "从 /o/ 滑向 /ʊ/，嘴唇由圆到更圆、更小，像中文“欧”。不要读成单一的“哦”。", words: [[go, o], [home, o], [boat, oa], [know, ow]], pairs: [aw]}
+  # ---------- 双元音 ----------
+  - {id: eye, ipa: aɪ, group: diphthong, img: [a, ɪ], tip: "从张大嘴的 /a/ 滑向 /ɪ/，像中文“爱”。开头要张够。", words: [[my, y], [time, i], [night, igh], [buy, uy]], pairs: [oy]}
+  - {id: ow, ipa: aʊ, group: diphthong, img: [a, ʊ], tip: "从 /a/ 滑向 /ʊ/，嘴巴由大到小、嘴唇收圆，像中文“奥”。", words: [[now, ow], [house, ou], [out, ou], [down, ow]], pairs: [oh]}
+  - {id: oy, ipa: ɔɪ, group: diphthong, img: [ɪ], approx: true, tip: "从圆唇的 /ɔ/ 滑向 /ɪ/，像中文“哦一”连起来快读。", words: [[boy, oy], [coin, oi], [noise, oi], [enjoy, oy]], pairs: [eye]}
+  # ---------- 辅音 ----------
+  - {id: p, ipa: p, group: consonant, img: [p], tip: "双唇紧闭再突然打开，送出一股气（清音，声带不振动）。词首要送气明显。", words: [[pen, p], [happy, pp], [stop, p]], pairs: [b]}
+  - {id: b, ipa: b, group: consonant, img: [b], tip: "口型同 /p/，但声带振动（浊音），气流弱。", words: [[bed, b], [rabbit, bb], [job, b]], pairs: [p]}
+  - {id: t, ipa: t, group: consonant, img: [t], tip: "舌尖抵住上齿龈（上门牙后面的小凸起），再突然放开送气。美音里两个元音之间的 t 常变成快速的闪音，听起来像轻 d（water）。", words: [[ten, t], [stop, t], [water, t]], pairs: [d]}
+  - {id: d, ipa: d, group: consonant, img: [d], tip: "口型同 /t/，声带振动。", words: [[dog, d], [ladder, dd], [good, d]], pairs: [t]}
+  - {id: k, ipa: k, group: consonant, img: [k], tip: "舌根抬起顶住软腭，再突然放开送气。", words: [[cat, c], [kick, k], [back, ck]], pairs: [g]}
+  - {id: g, ipa: g, group: consonant, img: [g], tip: "口型同 /k/，声带振动。", words: [[go, g], [bigger, gg], [dog, g]], pairs: [k]}
+  - {id: f, ipa: f, group: consonant, img: [f], tip: "上齿轻触下唇，气流从缝隙中摩擦而出（清音）。", words: [[fish, f], [coffee, ff], [laugh, gh]], pairs: [v]}
+  - {id: v, ipa: v, group: consonant, img: [v], tip: "口型同 /f/，声带振动。中国学生常读成 /w/，注意上齿一定要碰到下唇。", words: [[very, v], [never, v], [love, v]], pairs: [f, w]}
+  - {id: th, ipa: θ, group: consonant, img: [θ], tip: "舌尖轻放在上下齿之间（或抵住上齿背），气流从舌齿间吹出（清音）。不要读成 /s/ 或 /f/。", words: [[think, th], [nothing, th], [month, th]], pairs: [dh, s]}
+  - {id: dh, ipa: ð, group: consonant, img: [ð], tip: "口型同 /θ/，声带振动。the、this、that 这些高频词都用它。", words: [[this, th], [mother, th], [breathe, th]], pairs: [th, z]}
+  - {id: s, ipa: s, group: consonant, img: [s], tip: "舌尖靠近上齿龈，留一条窄缝，气流快速摩擦而出（清音），像蛇的“嘶”。", words: [[see, s], [lesson, ss], [nice, c]], pairs: [z, th, sh]}
+  - {id: z, ipa: z, group: consonant, img: [z], tip: "口型同 /s/，声带振动，像蜜蜂的“嗡”。复数和第三人称的 s 常读 /z/。", words: [[zoo, z], [easy, s], [dogs, s]], pairs: [s]}
+  - {id: sh, ipa: ʃ, group: consonant, img: [ʃ], tip: "嘴唇向前突出略圆，舌身抬向硬腭，气流摩擦而出（清音），比中文“师”更圆唇。", words: [[she, sh], [nation, ti], [wash, sh]], pairs: [s, zh]}
+  - {id: zh, ipa: ʒ, group: consonant, img: [ʒ], tip: "口型同 /ʃ/，声带振动。不常见，多出现在 -sure、-sion 里。", words: [[measure, s], [vision, s], [usual, s]], pairs: [sh]}
+  - {id: h, ipa: h, group: consonant, img: [], tip: "嘴巴保持后面元音的口型，从喉咙轻轻呼出气，像哈气。比中文“喝”的摩擦轻得多。", words: [[hat, h], [behind, h], [who, wh]], pairs: []}
+  - {id: ch, ipa: tʃ, group: consonant, img: [t, ʃ], tip: "先像 /t/ 一样舌尖抵住上齿龈，再滑到 /ʃ/ 放出气流（清音），嘴唇略突出。", words: [[chair, ch], [teacher, ch], [watch, tch]], pairs: [j, sh]}
+  - {id: j, ipa: dʒ, group: consonant, img: [d, ʒ], tip: "/tʃ/ 的浊音版：从 /d/ 滑到 /ʒ/，声带振动。", words: [[job, j], [magic, g], [bridge, dge]], pairs: [ch]}
+  - {id: m, ipa: m, group: consonant, img: [m], tip: "双唇闭合，气流从鼻腔出，声带振动。词尾的 m 要闭嘴收住。", words: [[man, m], [summer, mm], [time, m]], pairs: [n]}
+  - {id: n, ipa: n, group: consonant, img: [n], tip: "舌尖抵住上齿龈，气流从鼻腔出。词尾的 n 舌尖要顶住，不要读成 /ŋ/。", words: [["no", n], [dinner, nn], [sun, n]], pairs: [ng, l]}
+  - {id: ng, ipa: ŋ, group: consonant, img: [ŋ], tip: "舌根抬起顶住软腭，气流从鼻腔出，像中文“昂”的尾音。-ing 结尾的 g 通常不单独发出来。", words: [[sing, ng], [thinking, ng], [long, ng]], pairs: [n]}
+  - {id: l, ipa: l, group: consonant, img: [], tip: "舌尖抵住上齿龈，气流从舌头两侧流出。词尾的 l（暗 l）舌根还要向后抬，听起来像轻“喔”，不要省略。", words: [[light, l], [hello, ll], [feel, l]], pairs: [r, n]}
+  - {id: r, ipa: r, group: consonant, img: [r], approx: true, tip: "美音 r：舌尖向上卷起但不碰到任何地方（或舌身向后缩），嘴唇略圆。和中文“日”不同，不要有摩擦。", words: [[red, r], [sorry, rr], [car, r]], pairs: [l, w]}
+  - {id: w, ipa: w, group: consonant, img: [], tip: "嘴唇收圆突出，像要说“乌”，然后迅速滑到后面的元音。", words: [[we, w], [away, w], [one, o]], pairs: [v, r]}
+  - {id: y, ipa: j, group: consonant, img: [], tip: "舌头前部抬向硬腭，像说“衣”，然后迅速滑到后面的元音。", words: [["yes", y], [beyond, y], [use, u]], pairs: []}

@@ -47,6 +47,10 @@ export const icon = {
   star: svg('<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>', 20),
   check: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 20),
   chevron: svg('<path d="M9 6l6 6-6 6"/>', 18),
+  speaker: svg('<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>', 22),
+  hint: svg('<path d="M4 5v9M20 5v9"/><path d="M6.5 16.5c3 3.5 8 3.5 11 0"/>'),
+  search: svg('<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>'),
+  home: svg('<path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/>'),
 };
 
 export function iconEl(name: keyof typeof icon) {

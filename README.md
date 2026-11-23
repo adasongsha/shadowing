@@ -1,11 +1,12 @@
-# 英语跟读对比工具（Shadowing Compare）
+# 美音跟读（Shadowing Compare）
 
-把英语口语课程里的英文例句切成单句音频，在 iPhone 上逐句「听原音 → 录自己 → 对比」。
+一个面向中国学习者的美式英语发音 App：**音标 / 句子 / 段落** 三部分，外加离线查词。核心练习方式是逐句「听原音 → 录自己 → 对比」。
 
 | 部分 | 位置 | 状态 |
 |---|---|---|
-| A. 切句流水线（Python） | `pipeline/` | **M2：Day 1 已跑通** |
-| B. 练习 App（PWA） | `app/` | M1 完成，iPhone 已验证 |
+| A. 切句流水线（Python） | `pipeline/` | 把课程音频切成单句课程包（私人使用） |
+| B. 练习 App（PWA） | `app/` | 音标、句子（含连读弱读提示）、查词；段落筹备中 |
+| C. 内置公开内容生成 | `tools/content/` | 词典、音标、样例句子课，只用可商用的开放资源 |
 
 > 课程音频和你的录音**只存在本地**：App 是纯静态网页，课程包通过「文件」App 导入，存进手机的 IndexedDB，不上传任何服务器。`data/` 已加入 `.gitignore`。
 
@@ -20,7 +21,9 @@ app/                 练习 PWA（Vite + 原生 TypeScript，依赖只有 jszip�
   src/importer.ts    课程包导入与合并
   src/views/         页面：课程库 / Day 列表 / 句子列表 / 练习 / 设置
   public/sw.js       Service Worker（构建时自动注入预缓存列表）
+  public/content/     内置公开内容（由 tools/content 生成，进 git）
 tools/
+  content/           生成内置公开内容（见下方「内置公开内容」）
   make_test_pack.py  用 macOS 的 say 生成测试课程包
   make_icons.py      生成 App 图标
 pipeline/            切句流水线（见下方「切句流水线」）
@@ -168,6 +171,52 @@ npm run dev:https    # 让同一 Wi-Fi 下的 iPhone 访问（自签名证书）
 
 如果「录完回放声音很小」：到 **设置 → 录完立即释放麦克风** 打开再试，并告诉我结果。
 
+## 内置公开内容（`tools/content/`）
+
+App 自带的内容都是**可以公开发布、可以商用**的：原创句子、开源语音合成、开放许可的数据。付费课程的音频和文本不进这里，继续走「导入课程包」，只存在自己手机上。
+
+| 内容 | 来源 | 许可 | 脚本 |
+|---|---|---|---|
+| 查词（约 3.7 万词 + 2.8 万词形） | ECDICT 中文释义 + CMUdict 美音音标 | MIT / BSD | `build_dict.py` |
+| 舌位剖面图（26 张） | Richard Wright & Dan McCloy, phonetics-teaching-assets | CC0 | `fetch_sagittal.py` |
+| 音标（41 个美音音素） | `phonemes.yaml`（发音要领、例词，手工维护） | 原创 | `build_ipa.py` |
+| 样例句子课（5 组 30 句） | `sentences.yaml`（原创句子） | 原创 | `build_sentences.py` |
+| 例词、句子音频 | Kokoro-82M 语音合成（`af_heart` 美音女声） | Apache 2.0 | `tts.py` |
+| 连读 / 弱读 / 闪音 / 省略提示 | CMUdict + 规则自动标注 | — | `hints.py` |
+
+### 安装（一次性）
+
+```bash
+cd tools/content
+uv venv .venv --python 3.12
+uv pip install --python .venv/bin/python -i https://pypi.tuna.tsinghua.edu.cn/simple kokoro-onnx soundfile pyyaml
+
+# 数据和模型放到 data/（不进 git）
+mkdir -p ../../data/dict ../../data/models/kokoro
+curl -L -o ../../data/dict/ecdict.csv https://raw.githubusercontent.com/skywind3000/ECDICT/master/ecdict.csv
+curl -L -o ../../data/dict/cmudict.dict https://raw.githubusercontent.com/cmusphinx/cmudict/master/cmudict.dict
+for f in kokoro-v1.0.onnx voices-v1.0.bin; do
+  curl -L -o ../../data/models/kokoro/$f https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/$f
+done
+```
+
+### 生成
+
+```bash
+cd tools/content
+.venv/bin/python build_dict.py          # → app/public/content/dict/a.json … z.json
+.venv/bin/python fetch_sagittal.py      # 下载剖面图到 data/commons/svg
+.venv/bin/python build_ipa.py           # → app/public/content/ipa/
+.venv/bin/python build_sentences.py     # → app/public/content/sentences/sample.zip
+.venv/bin/python hints.py "Put it on the table."   # 单独看某句的自动标注
+```
+
+**改内容**：改 `phonemes.yaml`（发音要领、例词）或 `sentences.yaml`（句子），再运行对应脚本。音频已经合成过、文字没变的会复用，加 `--force` 全部重做。
+
+**以后换成自己的录音**：把录好的 m4a 放到 `app/public/content/ipa/audio/<单词>.m4a`，或者 `data/work/sample-sentences/audio/<句子id>.m4a`，覆盖合成的文件即可（脚本不会覆盖已存在的文件）。
+
+**给私人课程补提示**：`hints.py --file data/work/day01/cut.json` 会给每句加上 `hints` 字段，再用流水线打包即可。
+
 ## 课程包格式
 
 ```
@@ -177,3 +226,16 @@ npm run dev:https    # 让同一 Wi-Fi 下的 iPhone 访问（自签名证书）
 ```
 
 `manifest.json` 见 SPEC 2.6。重复导入同一个 `course_id` 会按句子 id 合并：同 id 覆盖、新 id 追加、其它天保留。
+
+每句可以多一个可选的 `hints` 字段（没有也照常能用）：
+
+```json
+"hints": [
+  {"type": "link",  "from": 3, "to": 6, "note": "连读：前词结尾的辅音直接接到后词的元音上"},
+  {"type": "weak",  "from": 15, "to": 18, "note": "弱读 /ðə/"},
+  {"type": "flap",  "from": 10, "to": 11, "note": "闪音：t 夹在元音之间，听起来像轻 d"},
+  {"type": "elide", "from": 4, "to": 5, "note": "省略：t 夹在两个辅音之间，通常不发音"}
+]
+```
+
+`from` / `to` 是英文原文里的字符位置（左闭右开）。`link` 从前一个词的最后一个字母，到后一个词的第一个字母之后。
