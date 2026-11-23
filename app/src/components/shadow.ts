@@ -1,5 +1,5 @@
-// 紧凑版跟读按钮组（原音 / 录音 / 我的 / 对比），用在音标页的例词上。
-// 句子练习页功能更多（历史录音、标记、倍速），仍用 views/practice.ts 自己的实现。
+// 紧凑版跟读按钮组（原音 / 录音，录过以后出现 我的 / 对比），用在音标页的例词上。
+// 句子练习页功能更多（波形、历史录音、标记、倍速），用 views/practice.ts 自己的实现。
 import { player, recorder } from '../audio';
 import { addRecording, listRecordings } from '../db';
 import { fetchBlob } from '../content';
@@ -19,7 +19,8 @@ export function shadowRow(courseId: string, itemId: string, origPath: string) {
     h('button', { class: `mini ${cls}`, type: 'button', 'aria-label': label, onclick, html: ic });
 
   const bOrig = mk('orig', icon.play, '原音', () => toggle('orig', () => (orig ? [{ blob: orig }] : [])));
-  const bRec = mk('rec', icon.mic, '录音', onRec);
+  const DOT = '<span class="dot"></span>';
+  const bRec = mk('rec', DOT, '跟读录音', onRec);
   const bMine = mk('mine', icon.play, '我的录音', () => toggle('mine', () => (mine ? [{ blob: mine }] : [])));
   const bCmp = mk('cmp', icon.compare, '对比', () =>
     toggle('cmp', () => (orig && mine ? [{ blob: orig }, { blob: mine }] : [])),
@@ -61,7 +62,9 @@ export function shadowRow(courseId: string, itemId: string, origPath: string) {
     bCmp.disabled = recording || !orig || !mine;
     bRec.disabled = !!recorder.isRecording && !recording; // 别处在录音时禁用
     bRec.classList.toggle('recording', recording);
-    bRec.innerHTML = recording ? icon.stop : icon.mic;
+    bRec.innerHTML = DOT;
+    bMine.hidden = !mine;
+    bCmp.hidden = !mine;
     bOrig.innerHTML = p === tag('orig') ? icon.stop : icon.play;
     bMine.innerHTML = p === tag('mine') ? icon.stop : icon.play;
     bCmp.innerHTML = p === tag('cmp') ? icon.stop : icon.compare;

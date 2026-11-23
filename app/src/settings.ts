@@ -3,14 +3,22 @@
 /** 文本显示：all 英文+中文 / en 只显示英文（隐藏中文）/ none 全部隐藏 */
 export type TextMode = 'all' | 'en' | 'none';
 
+/** 上次练习的位置（首页「接着上次」） */
+export interface LastPos {
+  courseId: string;
+  day: number;
+  idx: number;
+}
+
 export interface Settings {
   rate: 0.75 | 1;
   textMode: TextMode;
   focusMode: boolean;
   /** 显示连读 / 弱读等发音提示 */
   showHints: boolean;
-  /** 练习页「这句话为什么这样读」默认展开 */
+  /** 练习页「这句话为什么这样读」默认展开（旧版用，保留兼容） */
   noteOpen: boolean;
+  last?: LastPos;
   /** 录完立即释放麦克风：如果实测录音后回放声音很小（走了听筒），打开它 */
   releaseMicAfterRecord: boolean;
 }

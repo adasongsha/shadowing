@@ -51,6 +51,10 @@ export const icon = {
   hint: svg('<path d="M4 5v9M20 5v9"/><path d="M6.5 16.5c3 3.5 8 3.5 11 0"/>'),
   search: svg('<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>'),
   home: svg('<path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/>'),
+  book: svg('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/>'),
+  user: svg('<circle cx="12" cy="8" r="4"/><path d="M4.5 20c1.5-4 4.5-5.5 7.5-5.5s6 1.5 7.5 5.5"/>'),
+  close: svg('<path d="M6 6l12 12M18 6L6 18"/>', 20),
+  bookmark: svg('<path d="M6 4h12v16l-6-4-6 4z"/>', 20),
 };
 
 export function iconEl(name: keyof typeof icon) {

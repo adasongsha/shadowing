@@ -8,7 +8,8 @@
 //   #/c/<courseId>             Day 列表
 //   #/c/<courseId>/d/<day>     句子列表
 //   #/c/<courseId>/d/<day>/<i> 练习页（第 i 句，从 0 开始）
-//   #/settings                 设置
+//   #/c/<courseId>/d/<day>/<i>/why  这句为什么这样读
+//   #/me（旧 #/settings）       我的
 import './style.css';
 import { player } from './audio';
 import { homeView } from './views/home';
@@ -19,7 +20,8 @@ import { libraryView } from './views/library';
 import { courseView } from './views/course';
 import { dayView } from './views/day';
 import { practiceView } from './views/practice';
-import { settingsView } from './views/settings';
+import { meView } from './views/me';
+import { explainView } from './views/explain';
 
 export type Cleanup = (() => void) | void;
 export type View = (root: HTMLElement, params: string[]) => Promise<Cleanup> | Cleanup;
@@ -32,10 +34,11 @@ const routes: [RegExp, View][] = [
   [/^\/paragraphs$/, paragraphsView],
   [/^\/dict$/, dictView],
   [/^\/credits$/, creditsView],
-  [/^\/settings$/, settingsView],
+  [/^\/(?:me|settings)$/, meView],
   [/^\/c\/([^/]+)$/, courseView],
   [/^\/c\/([^/]+)\/d\/(\d+)$/, dayView],
   [/^\/c\/([^/]+)\/d\/(\d+)\/(\d+)$/, practiceView],
+  [/^\/c\/([^/]+)\/d\/(\d+)\/(\d+)\/why$/, explainView],
 ];
 
 const root = document.getElementById('app')!;

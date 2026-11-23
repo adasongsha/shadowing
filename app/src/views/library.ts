@@ -1,13 +1,13 @@
-// 句子课程库：内置样例课 + 导入的课程包，可删除。
+// 句子课程库：内置样例课 + 导入的课程包，可导入、删除。
 import { dismissBuiltin, ensureBuiltinCourse } from '../content';
 import { deleteCourse, listCourses, progressMap, type Course } from '../db';
 import { importPack } from '../importer';
 import { enc } from '../nav';
-import { h, iconEl, toast } from '../ui';
+import { h, icon, iconEl, toast } from '../ui';
 
 export async function libraryView(root: HTMLElement) {
-  const list = h('div', { class: 'list' });
-  const status = h('div', { class: 'import-status', hidden: true });
+  const list = h('div', { class: 'section' });
+  const status = h('p', { class: 'small muted', hidden: true });
 
   const input = h('input', { type: 'file', accept: '.zip,application/zip', class: 'visually-hidden' }) as HTMLInputElement;
   input.addEventListener('change', async () => {
@@ -17,7 +17,7 @@ export async function libraryView(root: HTMLElement) {
     status.hidden = false;
     try {
       const r = await importPack(file, (m) => (status.textContent = m));
-      toast(`${r.merged ? '已合并' : '已导入'}「${r.title}」：${r.days} 天 / ${r.sentences} 句`, 3000);
+      toast(`${r.merged ? '已合并' : '已导入'}「${r.title}」：${r.days} 组 / ${r.sentences} 句`, 3000);
       await renderList();
     } catch (e: any) {
       toast(`导入失败：${e?.message ?? e}`, 4000);
@@ -35,20 +35,19 @@ export async function libraryView(root: HTMLElement) {
       list.replaceChildren(
         h(
           'div',
-          { class: 'empty' },
+          { class: 'card empty' },
           h('p', { class: 'empty-title' }, '还没有课程'),
-          h('p', null, '点上面的「导入课程包」，从「文件」App 里选择 .zip 课程包。'),
+          h('p', null, '点下面的「导入课程包」，从「文件」App 里选择 .zip 课程包。'),
           h(
             'button',
-            { class: 'btn', type: 'button', onclick: async () => (dismissBuiltin(false), await ensureBuiltinCourse(), renderList()) },
+            { class: 'btn ink', type: 'button', onclick: async () => (dismissBuiltin(false), await ensureBuiltinCourse(), renderList()) },
             '恢复内置样例课',
           ),
         ),
       );
       return;
     }
-    const rows = await Promise.all(courses.map(courseRow));
-    list.replaceChildren(...rows);
+    list.replaceChildren(h('div', { class: 'list' }, await Promise.all(courses.map(courseRow))));
   }
 
   async function courseRow(c: Course) {
@@ -58,8 +57,9 @@ export async function libraryView(root: HTMLElement) {
     const del = h(
       'button',
       {
-        class: 'icon-btn danger',
-        'aria-label': '删除课程',
+        class: 'icon-btn',
+        type: 'button',
+        'aria-label': `删除「${c.title}」`,
         onclick: async (e: Event) => {
           e.preventDefault();
           e.stopPropagation();
@@ -69,17 +69,17 @@ export async function libraryView(root: HTMLElement) {
           toast('已删除');
           renderList();
         },
+        html: icon.trash,
       },
-      iconEl('trash'),
     );
     return h(
       'a',
-      { class: 'row card', href: `#/c/${enc(c.course_id)}` },
+      { class: 'row', href: `#/c/${enc(c.course_id)}` },
       h(
-        'div',
+        'span',
         { class: 'row-main' },
-        h('div', { class: 'row-title' }, c.title, c.builtin && h('span', { class: 'tag' }, '内置')),
-        h('div', { class: 'row-sub' }, `${c.days.length} 天 · ${total} 句 · 已练 ${practiced}`),
+        h('span', { class: 'row-title' }, c.title, c.builtin && h('span', { class: 'tag', style: { marginLeft: '8px' } }, '内置')),
+        h('span', { class: 'row-sub' }, `${c.days.length} 组 · ${total} 句 · 已练 ${practiced}`),
         progressBar(practiced, total),
       ),
       del,
@@ -91,19 +91,19 @@ export async function libraryView(root: HTMLElement) {
       'header',
       { class: 'topbar' },
       h('a', { class: 'icon-btn', href: '#/', 'aria-label': '返回首页' }, iconEl('back')),
-      h('h1', null, '句子'),
+      h('div', { class: 'topbar-title' }, h('strong', null, '句子')),
       h('span', { class: 'icon-btn-spacer' }),
     ),
     h(
       'main',
       { class: 'content' },
-      h('label', { class: 'btn primary block' }, iconEl('plus'), '导入课程包', input),
-      status,
       list,
+      status,
+      h('label', { class: 'btn block' }, iconEl('plus'), '导入课程包', input),
+      h('p', { class: 'small muted center' }, '你导入的课程包和录音只保存在这台设备上。'),
     ),
   );
   await renderList();
-  // 第一次进来时自动装上内置样例课
   try {
     status.hidden = false;
     if (await ensureBuiltinCourse((m) => (status.textContent = m))) await renderList();
@@ -116,5 +116,5 @@ export async function libraryView(root: HTMLElement) {
 
 export function progressBar(done: number, total: number) {
   const pct = total ? Math.round((done / total) * 100) : 0;
-  return h('div', { class: 'bar', role: 'progressbar', 'aria-valuenow': pct }, h('span', { style: { width: `${pct}%` } }));
+  return h('div', { class: 'bar', role: 'progressbar', 'aria-valuenow': pct, style: { marginTop: '8px' } }, h('span', { style: { width: `${pct}%` } }));
 }

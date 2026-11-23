@@ -76,6 +76,14 @@ export interface Progress {
   updatedAt: number;
 }
 
+/** 生词本条目 */
+export interface WordEntry {
+  word: string;
+  ipa: string;
+  zh: string;
+  addedAt: number;
+}
+
 interface Schema extends DBSchema {
   courses: { key: string; value: Course };
   audio: { key: string; value: StoredAudio; indexes: { byCourse: string } };
@@ -85,6 +93,7 @@ interface Schema extends DBSchema {
     indexes: { bySentence: string; byCourse: string };
   };
   progress: { key: string; value: Progress; indexes: { byCourse: string } };
+  words: { key: string; value: WordEntry };
 }
 
 export const MAX_RECORDINGS = 3;
@@ -93,14 +102,18 @@ let dbp: Promise<IDBPDatabase<Schema>> | null = null;
 
 export function db() {
   if (!dbp) {
-    dbp = openDB<Schema>('shadowing', 1, {
-      upgrade(d) {
-        d.createObjectStore('courses', { keyPath: 'course_id' });
-        d.createObjectStore('audio', { keyPath: 'key' }).createIndex('byCourse', 'courseId');
-        const r = d.createObjectStore('recordings', { keyPath: 'id', autoIncrement: true });
-        r.createIndex('bySentence', 'skey');
-        r.createIndex('byCourse', 'courseId');
-        d.createObjectStore('progress', { keyPath: 'skey' }).createIndex('byCourse', 'courseId');
+    dbp = openDB<Schema>('shadowing', 2, {
+      upgrade(d, oldVersion) {
+        if (oldVersion < 1) {
+          d.createObjectStore('courses', { keyPath: 'course_id' });
+          d.createObjectStore('audio', { keyPath: 'key' }).createIndex('byCourse', 'courseId');
+          const r = d.createObjectStore('recordings', { keyPath: 'id', autoIncrement: true });
+          r.createIndex('bySentence', 'skey');
+          r.createIndex('byCourse', 'courseId');
+          d.createObjectStore('progress', { keyPath: 'skey' }).createIndex('byCourse', 'courseId');
+        }
+        // v2：生词本
+        if (oldVersion < 2) d.createObjectStore('words', { keyPath: 'word' });
       },
     });
   }
@@ -161,6 +174,7 @@ export async function addRecording(courseId: string, sentenceId: string, blob: B
   p.updatedAt = Date.now();
   await ps.put(p);
   await tx.done;
+  markPracticedToday();
 }
 
 export async function clearAllRecordings() {
@@ -172,6 +186,11 @@ export async function allRecordings() {
 }
 
 // ---------- 进度 / 标记 ----------
+
+/** 所有课程（含音标）的进度，用于首页和「我的」统计 */
+export async function allProgress() {
+  return (await db()).getAll('progress');
+}
 
 export async function progressMap(courseId: string) {
   const all = await (await db()).getAllFromIndex('progress', 'byCourse', courseId);
@@ -185,4 +204,62 @@ export async function setMark(courseId: string, sentenceId: string, mark: Mark) 
   p.mark = mark;
   p.updatedAt = Date.now();
   await d.put('progress', p);
+}
+
+// ---------- 生词本 ----------
+
+export async function listWords() {
+  return (await (await db()).getAll('words')).sort((a, b) => b.addedAt - a.addedAt);
+}
+export async function hasWord(word: string) {
+  return !!(await (await db()).get('words', word));
+}
+export async function addWord(e: Omit<WordEntry, 'addedAt'>) {
+  await (await db()).put('words', { ...e, addedAt: Date.now() });
+}
+export async function removeWord(word: string) {
+  await (await db()).delete('words', word);
+}
+
+// ---------- 练习天数（连续天数用） ----------
+// 存在 localStorage：录音只保留最近 3 条，不能用来回溯哪天练过。
+
+const DAYS_KEY = 'shadowing.days';
+const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+
+function readDays(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(DAYS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+export function markPracticedToday() {
+  const days = readDays();
+  const k = dayKey(new Date());
+  if (days[days.length - 1] === k) return;
+  days.push(k);
+  try {
+    localStorage.setItem(DAYS_KEY, JSON.stringify(days.slice(-400)));
+  } catch {
+    /* 忽略 */
+  }
+}
+
+/** 连续练习天数：今天没练则从昨天往前数 */
+export function streakDays() {
+  const set = new Set(readDays());
+  const d = new Date();
+  if (!set.has(dayKey(d))) d.setDate(d.getDate() - 1);
+  let n = 0;
+  while (set.has(dayKey(d))) {
+    n++;
+    d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+
+export function totalPracticeDays() {
+  return readDays().length;
 }

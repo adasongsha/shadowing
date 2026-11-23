@@ -1,5 +1,9 @@
-// 句子练习页（核心）：原音 / 录音 / 我的 / 对比，倍速，标记，历史录音，专注模式。
+// 句子练习页（原型 F-Practice）：衬线大字句子 + 发音标记，原音 / 我的波形对比，
+// 「为什么这样读」摘要，底部操作区（原音 / 我的 / 录音 / 对比）。显示设置收在 Aa 面板里。
 import { player, recorder, MAX_RECORD_MS } from '../audio';
+import { hintLegend, renderSentence } from '../components/richtext';
+import { openSheet } from '../components/sheet';
+import { openWordCard } from '../components/wordcard';
 import {
   addRecording,
   getAudio,
@@ -11,12 +15,16 @@ import {
   type Mark,
   type Recording,
 } from '../db';
-import { hasIntro, introCard, noteCard } from '../components/explain';
-import { hintLegend, renderSentence } from '../components/richtext';
-import { openWordCard } from '../components/wordcard';
 import { enc, go } from '../nav';
 import { settings, type TextMode } from '../settings';
 import { fmtAgo, h, icon, iconEl, toast } from '../ui';
+import { durationFeedback, waveOf, type Wave } from '../wave';
+
+const TEXT_MODES: [TextMode, string][] = [
+  ['all', '英文 + 中文'],
+  ['en', '只看英文'],
+  ['none', '全部隐藏'],
+];
 
 export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]: string[]) {
   const course = await getCourse(courseId);
@@ -27,46 +35,32 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     location.hash = `#/c/${enc(courseId)}`;
     return;
   }
+  settings.set({ last: { courseId, day: day.day, idx } });
 
   const base = `/c/${enc(courseId)}/d/${day.day}`;
   const total = day.sentences.length;
-  const [orig, recs, prog] = await Promise.all([
-    getAudio(courseId, s.id),
-    listRecordings(courseId, s.id),
-    progressMap(courseId),
-  ]);
+  const [orig, recs, prog] = await Promise.all([getAudio(courseId, s.id), listRecordings(courseId, s.id), progressMap(courseId)]);
   let recordings: Recording[] = recs;
   let mark: Mark = prog.get(skey(courseId, s.id))?.mark ?? 'none';
   const st = settings.get();
-
-  // ---------- 元素 ----------
-  const btn = (cls: string, ic: string, label: string, onclick: () => void) =>
-    h('button', { class: `ctl ${cls}`, type: 'button', onclick }, h('span', { class: 'ic', html: ic }), h('span', { class: 'lbl' }, label));
-
-  const bOrig = btn('orig', icon.play, '原音', () => toggle('orig', () => [{ blob: orig!, rate: settings.get().rate }]));
-  const bMine = btn('mine', icon.play, '我的', () => toggle('mine', () => [{ blob: latestBlob()! }]));
-  const bRec = btn('rec', icon.mic, '录音', onRecord);
-  const bCmp = btn('cmp', icon.compare, '对比', () =>
-    toggle('compare', () => [{ blob: orig!, rate: settings.get().rate }, { blob: latestBlob()! }]),
-  );
-  const recLabel = bRec.querySelector('.lbl')!;
-  const recIcon = bRec.querySelector('.ic')!;
-
   const hasHints = !!s.hints?.length;
   const hasStress = !!s.hints?.some((x) => x.type === 'stress');
+
+  // ---------- 句子 ----------
   const text = h(
     'div',
     { class: 'sentence-text' },
     h(
       'p',
-      { class: `sentence${hasStress ? ' has-stress' : ''}`, lang: 'en' },
+      { class: `sentence${hasStress ? '' : ' plain'}`, lang: 'en' },
       renderSentence(s.text, s.hints, (t) => openWordCard(t.word, t.hints)),
     ),
     s.zh && h('p', { class: 'translation' }, s.zh),
   );
-  const textWrap = h('div', { class: 'sentence-wrap' }, text, hasHints && hintLegend(s.hints));
-  // 捕获阶段处理「偷看」：文本被隐藏时，第一下点击只是显示出来，不触发查词
-  textWrap.addEventListener(
+  const peekHint = h('p', { class: 'peek-hint' });
+  const sentenceBlock = h('section', { class: 'sentence-block' }, text, peekHint, hasHints && hintLegend(s.hints));
+  // 文本被隐藏时，第一下点击只是「偷看」，不触发查词
+  sentenceBlock.addEventListener(
     'click',
     (e) => {
       const target = e.target as HTMLElement;
@@ -79,135 +73,172 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     },
     true,
   );
-  const peekHint = h('p', { class: 'peek-hint' });
-  textWrap.append(peekHint);
 
-  const rateSeg = h(
-    'div',
-    { class: 'seg', role: 'group', 'aria-label': '原音倍速' },
-    ...([0.75, 1] as const).map((r) =>
-      h(
-        'button',
-        {
-          type: 'button',
-          class: st.rate === r ? 'on' : '',
-          onclick: (e: Event) => {
-            settings.set({ rate: r });
-            rateSeg.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === e.currentTarget));
-          },
-        },
-        r === 1 ? '1.0×' : '0.75×',
-      ),
-    ),
+  // ---------- 波形 ----------
+  const waveOrig = h('div', { class: 'wave', 'aria-hidden': 'true' });
+  const waveMine = h('div', { class: 'wave empty' }, '录一遍后，这里显示你的波形');
+  const waveNote = h('p', { class: 'wave-note' });
+  const waves = h(
+    'section',
+    { class: 'card waves', 'aria-label': '波形对比' },
+    h('div', { class: 'wave-row orig' }, h('span', { class: 'wave-label' }, '原音'), waveOrig),
+    h('div', { class: 'wave-row mine' }, h('span', { class: 'wave-label' }, '我的'), waveMine),
+    waveNote,
   );
+  let origWave: Wave | null = null;
+  const drawBars = (el: HTMLElement, w: Wave) => {
+    el.classList.remove('empty');
+    el.replaceChildren(...w.bars.map((b) => h('i', { style: { height: `${Math.max(3, Math.round(b * 34))}px` } })));
+  };
+  async function renderWaves() {
+    if (orig && !origWave) {
+      origWave = await waveOf(orig);
+      if (origWave) drawBars(waveOrig, origWave);
+    }
+    const latest = latestBlob();
+    if (!latest) {
+      waveNote.textContent = origWave ? `原音 ${origWave.duration.toFixed(1)}s` : '';
+      return;
+    }
+    const mw = await waveOf(latest);
+    if (!mw) {
+      waveMine.textContent = '这台设备无法显示波形';
+      return;
+    }
+    drawBars(waveMine, mw);
+    waveNote.textContent = origWave
+      ? `原音 ${origWave.duration.toFixed(1)}s · 我的 ${mw.duration.toFixed(1)}s：${durationFeedback(origWave.duration, mw.duration)}`
+      : `我的 ${mw.duration.toFixed(1)}s`;
+  }
 
-  const markBtn = (m: Mark, ic: keyof typeof icon, label: string) =>
+  // ---------- 讲解摘要 ----------
+  const whyCard =
+    s.note &&
+    h(
+      'a',
+      { class: 'card why-card', href: `#${base}/${idx}/why` },
+      h('span', { class: 'why-head' }, '为什么这样读', h('span', { class: 'ic', html: icon.chevron })),
+      h('p', null, s.note),
+    );
+
+  const history = h('div', { class: 'history' });
+
+  // ---------- 底部操作区 ----------
+  const ctl = (cls: string, label: string, inner: string | Node, onclick: () => void) =>
+    h('button', { class: `ctl ${cls}`, type: 'button', onclick }, h('span', { class: 'disc' }, typeof inner === 'string' ? h('span', { class: 'ic', html: inner }) : inner), h('span', { class: 'lbl' }, label));
+  const bOrig = ctl('orig', '原音', icon.play, () => toggle('orig', () => [{ blob: orig!, rate: settings.get().rate }]));
+  const bMine = ctl('mine', '我的', icon.play, () => toggle('mine', () => [{ blob: latestBlob()! }]));
+  const bRec = ctl('rec', '录音', h('span', { class: 'dot' }), onRecord);
+  bRec.setAttribute('aria-label', '录音');
+  const bCmp = ctl('cmp', '对比', icon.compare, () =>
+    toggle('compare', () => [{ blob: orig!, rate: settings.get().rate }, { blob: latestBlob()! }]),
+  );
+  const recLabel = bRec.querySelector('.lbl')!;
+
+  const markBtn = (m: Mark, label: string, ic: keyof typeof icon) =>
     h(
       'button',
       {
         type: 'button',
-        class: `mark mark-${m}`,
+        class: `mark-${m}`,
         'aria-pressed': String(mark === m),
         onclick: async () => {
           mark = mark === m ? 'none' : m;
           updateMarks();
-          await setMark(courseId, s.id, mark);
+          await setMark(courseId, s!.id, mark);
         },
       },
       iconEl(ic),
       label,
     );
-  const marks = [markBtn('star', 'star', '需加强'), markBtn('done', 'check', '已掌握')];
+  const marks = [markBtn('star', '需加强', 'star'), markBtn('done', '已掌握', 'check')];
 
-  const history = h('div', { class: 'history' });
-
-  // 文本显示三档循环：全部显示 → 隐藏中文 → 全部隐藏
-  const MODES: Record<TextMode, { next: TextMode; badge: string; label: string; toast: string }> = {
-    all: { next: 'en', badge: '', label: '文本：全部显示', toast: '显示英文和中文' },
-    en: { next: 'none', badge: '英', label: '文本：只显示英文', toast: '已隐藏中文翻译' },
-    none: { next: 'all', badge: '', label: '文本：全部隐藏', toast: '已隐藏全部文本（纯听）' },
-  };
-  const textModeBtn = h('button', {
-    class: 'icon-btn text-mode',
-    type: 'button',
-    onclick: () => {
-      settings.set({ textMode: MODES[st.textMode].next });
-      st.textMode = settings.get().textMode;
-      toast(MODES[st.textMode].toast, 1500);
-      applyModes();
-    },
-  });
-
-  const hintBtn =
-    hasHints &&
-    h('button', {
-      class: 'icon-btn',
-      type: 'button',
-      'aria-label': '连读弱读提示',
-      'aria-pressed': String(st.showHints),
-      html: icon.hint,
-      onclick: (e: Event) => {
-        settings.set({ showHints: !settings.get().showHints });
-        st.showHints = settings.get().showHints;
-        (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(st.showHints));
-        toast(st.showHints ? '显示连读、弱读提示（点单词看说明）' : '已关闭发音提示', 1500);
-        applyModes();
-      },
-    });
-
-  const toggles = h(
-    'div',
-    { class: 'topbar-actions' },
-    hintBtn,
-    textModeBtn,
+  const dock = h(
+    'section',
+    { class: 'dock', 'aria-label': '跟读控制' },
+    h('div', { class: 'dock-row' }, bOrig, bMine, bRec, bCmp),
     h(
-      'button',
-      {
-        class: 'icon-btn',
-        type: 'button',
-        'aria-label': '专注模式',
-        'aria-pressed': String(st.focusMode),
-        onclick: (e: Event) => {
-          settings.set({ focusMode: !settings.get().focusMode });
-          st.focusMode = settings.get().focusMode;
-          (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(st.focusMode));
-          applyModes();
-        },
-        html: icon.focus,
-      },
+      'div',
+      { class: 'dock-meta' },
+      h('button', { type: 'button', disabled: idx === 0, onclick: () => step(-1) }, '← 上一句'),
+      marks[0],
+      marks[1],
+      h('button', { type: 'button', class: 'next', disabled: idx >= total - 1, onclick: () => step(1) }, '下一句 →'),
     ),
   );
 
-  const nav = h(
-    'nav',
-    { class: 'pager' },
-    h('button', { class: 'btn', type: 'button', disabled: idx === 0, onclick: () => step(-1) }, iconEl('prev'), '上一句'),
-    h('span', { class: 'pager-pos' }, `${idx + 1} / ${total}`),
-    h('button', { class: 'btn', type: 'button', disabled: idx >= total - 1, onclick: () => step(1) }, '下一句', iconEl('next')),
-  );
-
-  const card = h(
-    'section',
-    { class: 'practice-card' },
-    textWrap,
-    h('div', { class: 'controls' }, bOrig, bMine, bRec, bCmp),
-    h('div', { class: 'options' }, rateSeg, h('div', { class: 'marks' }, marks)),
-    s.note && noteCard(s.note, st.noteOpen, (open) => settings.set({ noteOpen: open })),
-    hasIntro(day.intro) && introCard(day.intro!, `关于「${day.title}」`, false),
-    history,
-  );
+  // ---------- 显示设置（Aa 面板） ----------
+  function openDisplay() {
+    const panel = openSheet('显示设置');
+    const seg = <T extends string | number>(opts: [T, string][], cur: () => T, set: (v: T) => void) => {
+      const el = h('div', { class: 'seg', role: 'group' });
+      const paint = () => el.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', opts[i][0] === cur()));
+      opts.forEach(([v, label]) => el.append(h('button', { type: 'button', onclick: () => (set(v), paint()) }, label)));
+      paint();
+      return el;
+    };
+    const sw = (label: string, sub: string, cur: boolean, set: (v: boolean) => void) => {
+      const input = h('input', { type: 'checkbox', role: 'switch' }) as HTMLInputElement;
+      input.checked = cur;
+      input.addEventListener('change', () => set(input.checked));
+      return h('label', { class: 'switch-row' }, h('span', null, label, h('span', { class: 'small muted' }, sub)), input);
+    };
+    panel.append(
+      h('h2', null, '显示设置'),
+      h(
+        'div',
+        { class: 'opt-group' },
+        h('span', { class: 'opt-label' }, '文本'),
+        seg(TEXT_MODES, () => st.textMode, (v) => {
+          settings.set({ textMode: v });
+          st.textMode = v;
+          applyModes();
+        }),
+      ),
+      h(
+        'div',
+        { class: 'opt-group' },
+        h('span', { class: 'opt-label' }, '原音速度'),
+        seg<number>([[1, '1.0×'], [0.75, '0.75×']], () => settings.get().rate, (v) => settings.set({ rate: v as 1 | 0.75 })),
+      ),
+      sw('发音标记', '重读、连读、弱读、闪音、省略', st.showHints, (v) => {
+        settings.set({ showHints: v });
+        st.showHints = v;
+        applyModes();
+      }),
+      sw('专注模式', '只留句子和按钮', st.focusMode, (v) => {
+        settings.set({ focusMode: v });
+        st.focusMode = v;
+        applyModes();
+      }),
+    );
+  }
 
   root.classList.add('practice');
   root.append(
     h(
       'header',
       { class: 'topbar' },
-      h('a', { class: 'icon-btn', href: '#' + base, 'aria-label': '返回句子列表' }, iconEl('back')),
-      h('h1', null, `${day.title}`),
-      toggles,
+      h('a', { class: 'icon-btn', href: `#${base}`, 'aria-label': '返回本组' }, iconEl('back')),
+      h('div', { class: 'topbar-title' }, h('strong', null, day.title), h('span', null, `第 ${idx + 1} 句，共 ${total} 句`)),
+      h('button', { class: 'icon-btn aa', type: 'button', 'aria-label': '显示设置', onclick: openDisplay }, 'Aa'),
     ),
-    h('main', { class: 'content' }, card),
-    nav,
+    h(
+      'main',
+      { class: 'content' },
+      h(
+        'div',
+        { class: 'dots', 'aria-hidden': 'true' },
+        day.sentences.map((x, i) =>
+          h('span', { class: i === idx ? 'on' : prog.get(skey(courseId, x.id))?.practiced ? 'done' : '' }),
+        ),
+      ),
+      sentenceBlock,
+      waves,
+      whyCard,
+      history,
+    ),
+    dock,
   );
 
   // ---------- 逻辑 ----------
@@ -236,14 +267,9 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     root.classList.toggle('focus', st.focusMode);
     root.classList.toggle('hide-text', st.textMode === 'none');
     root.classList.toggle('hide-zh', st.textMode === 'en' && !!s!.zh);
-    root.classList.toggle('show-hints', st.showHints && hasHints);
+    root.classList.toggle('marks-on', st.showHints && hasHints);
     text.classList.remove('peek');
-    const m = MODES[st.textMode];
-    textModeBtn.innerHTML = (st.textMode === 'none' ? icon.eyeOff : icon.eye) + (m.badge ? `<span class="mode-badge">${m.badge}</span>` : '');
-    textModeBtn.setAttribute('aria-label', m.label);
-    textModeBtn.setAttribute('aria-pressed', String(st.textMode !== 'all'));
-    peekHint.textContent =
-      st.textMode === 'none' ? '文本已隐藏 · 点一下偷看' : st.textMode === 'en' ? '点中文区域偷看翻译' : '点单词可以查词';
+    peekHint.textContent = st.textMode === 'none' ? '文本已隐藏 · 点一下偷看' : st.textMode === 'en' ? '点中文区域偷看翻译' : '';
   }
 
   function updateButtons() {
@@ -257,35 +283,30 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     bOrig.classList.toggle('active', p === 'orig');
     bMine.classList.toggle('active', p === 'mine');
     bCmp.classList.toggle('active', p === 'compare');
-    bOrig.querySelector('.ic')!.innerHTML = p === 'orig' ? icon.stop : icon.play;
-    bMine.querySelector('.ic')!.innerHTML = p === 'mine' ? icon.stop : icon.play;
-    bCmp.querySelector('.ic')!.innerHTML = p === 'compare' ? icon.stop : icon.compare;
+    bOrig.querySelector('.disc .ic')!.innerHTML = p === 'orig' ? icon.stop : icon.play;
+    bMine.querySelector('.disc .ic')!.innerHTML = p === 'mine' ? icon.stop : icon.play;
+    bCmp.querySelector('.disc .ic')!.innerHTML = p === 'compare' ? icon.stop : icon.compare;
   }
 
   function renderHistory() {
-    if (!recordings.length) {
-      history.replaceChildren(h('p', { class: 'muted small' }, '还没有录音。听一遍原音，然后点「录音」跟读。'));
+    if (recordings.length < 2) {
+      history.replaceChildren();
       return;
     }
     history.replaceChildren(
-      h('p', { class: 'muted small' }, `最近 ${recordings.length} 次录音（最多保留 3 次）`),
-      h(
-        'div',
-        { class: 'chips' },
-        recordings.map((r, i) => {
-          const tag = `hist-${r.id}`;
-          return h(
-            'button',
-            {
-              type: 'button',
-              class: `chip${player.playing === tag ? ' active' : ''}`,
-              onclick: () => toggle(tag, () => [{ blob: new Blob([r.data], { type: r.type }) }]),
-            },
-            h('span', { class: 'ic', html: player.playing === tag ? icon.stop : icon.play }),
-            `${i === 0 ? '最新' : `#${i + 1}`} · ${r.duration.toFixed(1)}s · ${fmtAgo(r.createdAt)}`,
-          );
-        }),
-      ),
+      ...recordings.map((r, i) => {
+        const tag = `hist-${r.id}`;
+        return h(
+          'button',
+          {
+            type: 'button',
+            class: `chip${player.playing === tag ? ' active' : ''}`,
+            onclick: () => toggle(tag, () => [{ blob: new Blob([r.data], { type: r.type }) }]),
+          },
+          h('span', { class: 'ic', html: player.playing === tag ? icon.stop : icon.play }),
+          `${i === 0 ? '最新' : `#${i + 1}`} · ${r.duration.toFixed(1)}s · ${fmtAgo(r.createdAt)}`,
+        );
+      }),
     );
   }
 
@@ -301,7 +322,6 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
     }
     try {
       const done = recorder.start(() => toast('已达 30 秒上限，自动停止'));
-      // 等 start 内部的 getUserMedia 完成后才真正开始；先更新 UI
       tick = window.setInterval(renderTimer, 100);
       const res = await done;
       clearInterval(tick);
@@ -310,17 +330,13 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
       } else {
         await addRecording(courseId, s!.id, res.blob, res.duration);
         recordings = await listRecordings(courseId, s!.id);
+        renderWaves();
       }
     } catch (e: any) {
       clearInterval(tick);
-      const msg =
-        e?.name === 'NotAllowedError'
-          ? '没有麦克风权限：请在「设置 → Safari → 麦克风」里允许'
-          : `录音失败：${e?.message ?? e}`;
-      toast(msg, 4000);
+      toast(e?.name === 'NotAllowedError' ? '没有麦克风权限：请在「设置 → Safari → 麦克风」里允许' : `录音失败：${e?.message ?? e}`, 4000);
     } finally {
       recLabel.textContent = '录音';
-      recIcon.innerHTML = icon.mic;
       updateButtons();
       renderHistory();
     }
@@ -328,17 +344,16 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
 
   function renderTimer() {
     if (!recorder.isRecording) return;
-    const ms = recorder.elapsedMs;
-    recIcon.innerHTML = icon.stop;
-    recLabel.textContent = `停止 ${(ms / 1000).toFixed(1)}s / ${MAX_RECORD_MS / 1000}s`;
+    recLabel.textContent = `${(recorder.elapsedMs / 1000).toFixed(1)}s / ${MAX_RECORD_MS / 1000}s`;
     updateButtons();
   }
 
   // 左右滑动切句（单手操作）
   let sx = 0;
   let sy = 0;
-  card.addEventListener('touchstart', (e) => ((sx = e.touches[0].clientX), (sy = e.touches[0].clientY)), { passive: true });
-  card.addEventListener(
+  const main = root.querySelector('main')!;
+  main.addEventListener('touchstart', (e) => ((sx = e.touches[0].clientX), (sy = e.touches[0].clientY)), { passive: true });
+  main.addEventListener(
     'touchend',
     (e) => {
       const dx = e.changedTouches[0].clientX - sx;
@@ -361,6 +376,7 @@ export async function practiceView(root: HTMLElement, [courseId, dayStr, idxStr]
   updateMarks();
   updateButtons();
   renderHistory();
+  renderWaves();
 
   return () => {
     off();

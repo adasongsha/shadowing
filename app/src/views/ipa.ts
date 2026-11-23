@@ -16,7 +16,7 @@ export async function ipaView(root: HTMLElement) {
       'header',
       { class: 'topbar' },
       h('a', { class: 'icon-btn', href: '#/', 'aria-label': '返回首页' }, iconEl('back')),
-      h('h1', null, '音标'),
+      h('div', { class: 'topbar-title' }, h('strong', null, '音标')),
       h('span', { class: 'icon-btn-spacer' }),
     ),
   );
@@ -35,7 +35,7 @@ export async function ipaView(root: HTMLElement) {
   const practiced = (p: Phoneme) => p.words.some((w) => prog.get(`${IPA_COURSE}/${p.id}:${w.w}`)?.practiced);
 
   main.replaceChildren(
-    h('p', { class: 'muted small' }, '美式英语共 41 个音素。点开一个音标，看舌位图和发音要领，再跟读例词。'),
+    h('p', { class: 'muted', style: { fontSize: '15px' } }, `美式英语共 ${data.phonemes.length} 个音素。点开一个音标，看舌位图和发音要领，再跟读例词。`),
     ...GROUPS.map(([g, label]) => {
       const items = data.phonemes.filter((p) => p.group === g);
       return h(
@@ -49,8 +49,8 @@ export async function ipaView(root: HTMLElement) {
             h(
               'a',
               { class: `ipa-cell${practiced(p) ? ' done' : ''}`, href: `#/ipa/${p.id}` },
-              h('span', { class: 'ipa-sym', lang: 'en' }, `/${p.ipa}/`),
-              h('span', { class: 'ipa-eg', lang: 'en' }, p.words[0]?.w ?? ''),
+              h('span', { class: 'ipa', lang: 'en' }, `/${p.ipa}/`),
+              h('span', { class: 'eg', lang: 'en' }, p.words[0]?.w ?? ''),
             ),
           ),
         ),

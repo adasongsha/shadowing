@@ -1,0 +1,9 @@
+本目录的字体文件均以 SIL Open Font License 1.1 发布，可以免费使用、打包和商用：
+
+- Source Serif 4 — Copyright 2014–2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.
+  https://github.com/adobe-fonts/source-serif
+- Gentium Book Plus — Copyright 2003–2022 SIL International (https://software.sil.org/gentium/).
+  https://software.sil.org/gentium/
+
+许可全文：https://openfontlicense.org/open-font-license-official-text/
+文件取自 Google Fonts，只保留了 latin / latin-ext 子集（包含国际音标字符）。
