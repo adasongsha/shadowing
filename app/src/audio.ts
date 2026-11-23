@@ -153,9 +153,14 @@ class Recorder {
     return this.mr?.state === 'recording';
   }
 
-  /** 当前是否持有一个活动的麦克风 stream */
+  /**
+   * 当前是否持有一个可用的麦克风 stream。
+   * iOS 在离开页面、切后台、控制中心、来电等打断之后，会把 track 结束或静音，
+   * 但不一定通知页面；所以除了 live 还要检查 muted / enabled。
+   */
   get holdsMic() {
-    return !!this.stream?.getAudioTracks().some((t) => t.readyState === 'live');
+    const t = this.stream?.getAudioTracks()[0];
+    return !!t && t.readyState === 'live' && !t.muted && t.enabled;
   }
 
   get supported() {
@@ -166,25 +171,48 @@ class Recorder {
     return this.isRecording ? Date.now() - this.startedAt : 0;
   }
 
-  /** 第一次点击录音时才申请麦克风；之后在 App 回到后台之前一直复用同一个 stream */
-  private async getStream() {
-    if (this.holdsMic) return this.stream!;
-    this.stream = await navigator.mediaDevices.getUserMedia({
+  /** 第一次点击录音时才申请麦克风；之后一直复用，直到它失效或 App 进入后台 */
+  private async getStream(fresh = false) {
+    if (!fresh && this.holdsMic) return this.stream!;
+    this.dropStream();
+    const stream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+    });
+    this.stream = stream;
+    // 系统结束了这个 track（被打断等）：丢掉，下次录音重新申请
+    stream.getAudioTracks()[0]?.addEventListener('ended', () => {
+      if (this.stream === stream) this.dropStream();
     });
     // 拿到麦克风后设好会话类型，持有麦克风期间保持不变
     setSession('play-and-record');
-    return this.stream;
+    return stream;
+  }
+
+  /** 丢掉当前 stream（不改音频会话类型） */
+  private dropStream() {
+    this.stream?.getTracks().forEach((t) => t.stop());
+    this.stream = null;
   }
 
   /** 开始录音，返回的 Promise 在录音结束（手动停止或 30s 自动停止）时 resolve */
   async start(onAutoStop?: () => void): Promise<RecordResult> {
     if (this.isRecording) throw new Error('已在录音');
     player.stop();
-    const stream = await this.getStream();
+    try {
+      return this.begin(await this.getStream(), onAutoStop);
+    } catch (e: any) {
+      if (e?.name === 'NotAllowedError') throw e; // 没有权限：重试也没用
+      // 复用的 stream 已经失效（常见于离开页面或切回 App 之后）：重新申请麦克风再试一次
+      this.dropStream();
+      await new Promise((r) => setTimeout(r, 200));
+      return this.begin(await this.getStream(true), onAutoStop);
+    }
+  }
+
+  /** 用给定的 stream 开始录音；创建或启动失败会同步抛出，方便上层重试 */
+  private begin(stream: MediaStream, onAutoStop?: () => void): Promise<RecordResult> {
     const mime = pickMime();
     const mr = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 96000 } : undefined);
-    this.mr = mr;
     const chunks: Blob[] = [];
     mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     const done = new Promise<RecordResult>((resolve, reject) => {
@@ -197,12 +225,15 @@ class Recorder {
         resolve({ blob: new Blob(chunks, { type }), duration });
       };
       mr.onerror = (e: any) => {
+        clearTimeout(this.autoStop);
         this.mr = null;
-        reject(e.error ?? new Error('录音出错'));
+        this.dropStream(); // 下次点录音时重新申请，不用刷新页面
+        reject(e.error ?? new Error('录音出错，请再点一次录音'));
       };
     });
+    mr.start(); // 失败会在这里抛出
+    this.mr = mr;
     this.startedAt = Date.now();
-    mr.start();
     this.autoStop = window.setTimeout(() => {
       if (this.isRecording) {
         onAutoStop?.();
@@ -219,8 +250,7 @@ class Recorder {
   /** 停止所有 track，释放麦克风（状态栏的录音指示会消失） */
   release() {
     if (this.isRecording) this.stop();
-    this.stream?.getTracks().forEach((t) => t.stop());
-    this.stream = null;
+    this.dropStream();
     setSession('auto');
   }
 }
@@ -235,3 +265,7 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 window.addEventListener('pagehide', () => recorder.release());
+// 从后退缓存（bfcache）恢复时，旧的麦克风连接已经不能用了
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) recorder.release();
+});
